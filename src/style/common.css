@@ -11,6 +11,8 @@
   --filter-border-radius: 10px;
   /* 顶部导航栏固定高度 */
   --head-height: 60px;
+  --page-empty-color: #F5F5FA;
+  --page-color: #66B1FF;
 }
 
 html,
@@ -26,6 +28,14 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   position: relative;
+}
+
+/* 其他都能忍，但是这个 border-radius 我一定要改 */
+#login-form .login-input input {
+  border-radius: 9px;
+}
+#register-form .login-input input {
+  border-radius: 9px;
 }
 
 .store-sidebar {
