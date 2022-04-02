@@ -18,7 +18,11 @@
     >
       <el-col
         :span="12"
-        style="background: var(--page-color); border-radius: 20px 0 0 20px"
+        style="
+          background: var(--page-color);
+          border-radius: 20px 0 0 20px;
+          height: 100%;
+        "
       >
         <el-row justify="center"
           ><h1 style="color: white">广西职称评定系统</h1></el-row
