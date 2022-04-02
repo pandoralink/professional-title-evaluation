@@ -3,6 +3,7 @@
   <i-menu></i-menu>
   <div
     style="
+      display: grid;
       min-height: calc(100% - 80px - 60px);
       padding: 10px 20px;
       box-sizing: border-box;
