@@ -59,7 +59,7 @@ const props = withDefaults(defineProps<Props>(), {
 }
 
 .base-container {
-  border-radius: 20px;
-  padding: 10px;
+  padding: 10px 20px;
+  background: white;
 }
 </style>

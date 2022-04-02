@@ -66,7 +66,12 @@
             </el-form-item>
             <el-form-item style="margin-top: 80px">
               <el-button
-                style="width: 100%; border-radius: 28px; height: 56px"
+                style="
+                  width: 100%;
+                  border-radius: 28px;
+                  height: 56px;
+                  background: var(--page-color);
+                "
                 type="primary"
                 @click="loginSubmitForm(loginFormRef)"
                 >登录
@@ -110,7 +115,12 @@
             </el-form-item>
             <el-form-item style="margin-top: 80px">
               <el-button
-                style="width: 100%; border-radius: 28px; height: 56px"
+                style="
+                  width: 100%;
+                  border-radius: 28px;
+                  height: 56px;
+                  background: var(--page-color);
+                "
                 type="primary"
                 @click="registerSubmitForm(registerFormRef)"
                 >注册
@@ -172,7 +182,7 @@ const loginSubmitForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   formEl.validate(async (valid) => {
     if (valid) {
-      router.push("/manage");
+      router.push("/person/manage");
       ElMessage.success("自动跳转");
       // const { data } = await login(loginData);
       // const res = data as Result;
@@ -193,7 +203,7 @@ const registerSubmitForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   formEl.validate(async (valid) => {
     if (valid) {
-      router.push("/manage");
+      router.push("/person/manage");
       ElMessage.success("自动跳转");
       // const { data } = await register(registerData);
       // const res = data as Result;

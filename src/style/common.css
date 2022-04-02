@@ -1,7 +1,6 @@
 :root {
   --border-radius: 20px;
   --empty-color: #f5f5f5;
-  --new-detail: #9195a3;
   --default-color: #00bafd;
   --default-border-color: #ebeef5;
   --default-link-color: #40b5ff;
@@ -13,6 +12,7 @@
   --head-height: 60px;
   --page-empty-color: #F5F5FA;
   --page-color: #66B1FF;
+  --active-background-color: #409EFF;
 }
 
 html,
@@ -28,12 +28,14 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   position: relative;
+  background: var(--page-empty-color);
 }
 
 /* 其他都能忍，但是这个 border-radius 我一定要改 */
 #login-form .login-input input {
   border-radius: 9px;
 }
+
 #register-form .login-input input {
   border-radius: 9px;
 }
@@ -103,17 +105,18 @@ body {
 
 /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
 ::-webkit-scrollbar {
-  width: 0px;
-  height: 0px;
-  background-color: #f5f5f5;
+  width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #0003;
+  border-radius: 10px;
+  transition: all .2s ease-in-out;
 }
 
 /*定义滚动条轨道 内阴影+圆角*/
 ::-webkit-scrollbar-track {
-  -webkit-box-shadow: inset 0 0 1px rgba(0, 0, 0, 0);
-  box-shadow: inset 0 0 1px rgba(0, 0, 0, 0);
   border-radius: 10px;
-  background-color: #f5f5f5;
 }
 
 .userInfo-content {
@@ -123,6 +126,7 @@ body {
 .file-breadcrumb {
   margin: 10px 0 0 10px;
 }
+
 .file-breadcrumb .el-breadcrumb__item span {
   color: var(--default-color) !important;
 }
@@ -287,6 +291,7 @@ body {
   background-color: white;
   flex-wrap: wrap;
 }
+
 .base-list-item.delete {
   border: 4px solid var(--default-color);
   border-radius: 10px;
@@ -337,6 +342,7 @@ body {
 .filter-content .filter-content-button {
   border-radius: var(--filter-border-radius);
 }
+
 .filter-content .filter-content-button.active {
   background-color: var(--active-filter-button);
 }
@@ -356,6 +362,7 @@ body {
   /* 56 + 10 = 筛选, 32 = 分页, 12*2 = 父 padding */
   min-height: calc(100% - (56px + 10px) - 32px - 12px * 2);
 }
+
 .base-content.new {
   /* 52 = 选项，padding 不被算在 height 内 */
   height: calc(100% - 52px);
@@ -373,6 +380,7 @@ body {
 #base-pagination button {
   background-color: white;
 }
+
 #base-pagination li:not(.active) {
   background-color: white;
 }
@@ -387,6 +395,7 @@ body {
 .new-briefIntroduction ~ span {
   color: var(--new-detail);
 }
+
 .new-briefIntroduction ~ .new-author {
   margin-right: 40px;
 }
