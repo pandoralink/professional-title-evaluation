@@ -1,22 +1,25 @@
 <template>
-  <div class="base-header">
-    <div class="base-right">
-      <slot name="right">
-        <h2 :id="title">
-          <b></b>
-          <span>{{ title }}</span>
-          <el-tag type="danger" v-if="require" style="margin-left: 12px"
-            >必填
-          </el-tag>
-        </h2>
-      </slot>
+  <div>
+    <!-- XXX: 搭配滑动监听指令，需为单根组件 -->
+    <div class="base-header">
+      <div class="base-right">
+        <slot name="right">
+          <h2 :id="title">
+            <b></b>
+            <span>{{ title }}</span>
+            <el-tag type="danger" v-if="require" style="margin-left: 12px"
+              >必填
+            </el-tag>
+          </h2>
+        </slot>
+      </div>
+      <div class="base-left">
+        <slot name="left"></slot>
+      </div>
     </div>
-    <div class="base-left">
-      <slot name="left"></slot>
+    <div class="base-container">
+      <slot name="content"></slot>
     </div>
-  </div>
-  <div class="base-container">
-    <slot name="content"></slot>
   </div>
 </template>
 

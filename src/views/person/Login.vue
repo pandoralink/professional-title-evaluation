@@ -65,6 +65,7 @@
                 size="large"
                 v-model="loginData.password"
                 type="password"
+                show-password
                 placeholder="密码"
               />
             </el-form-item>
@@ -114,6 +115,7 @@
                 size="large"
                 v-model="registerData.password"
                 type="password"
+                show-password
                 placeholder="密码"
               />
             </el-form-item>

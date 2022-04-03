@@ -1,53 +1,29 @@
 <template>
   <el-row justify="center" style="height: 100%">
     <el-col :span="3">
-      <el-menu
-        default-active="1"
-        style="border-radius: 20px; position: sticky; top: 20px"
-        unique-opened
-        @select="move"
+      <nav
+        style="
+          border-radius: 20px;
+          position: sticky;
+          top: 20px;
+          background: white;
+          padding: 20px 10px;
+        "
       >
-        <el-menu-item index="#个人信息">个人信息</el-menu-item>
-        <el-menu-item index="#评审会">评审会</el-menu-item>
-        <el-menu-item index="#学历情况">学历情况</el-menu-item>
-        <el-menu-item index="#工作经历">工作经历</el-menu-item>
-        <el-menu-item index="#主要经历">主要经历</el-menu-item>
-        <el-menu-item index="#行政政务">行政政务</el-menu-item>
-        <el-menu-item index="#论文">论文</el-menu-item>
-        <el-menu-item index="#业绩成果">业绩成果</el-menu-item>
-        <el-menu-item index="#专利">专利</el-menu-item>
-        <el-menu-item index="#承诺书">承诺书</el-menu-item>
-      </el-menu>
+        <ul style="margin: 0" v-scroll-spy-active v-scroll-spy-link>
+          <li v-for="(name, index) of menuList" :key="index">
+            <b></b><a>{{ name }}</a>
+          </li>
+        </ul>
+      </nav>
     </el-col>
     <el-col :span="1"></el-col>
-    <el-col :span="20" style="height: 100%; overflow: auto">
-      <base-list-item title="个人信息" require>
-        <template #left>
-          <el-button type="primary" :icon="Edit" circle />
-        </template>
-        <template #content>
-          <base-content :state="state" @update-state="updateState">
-            <template #content>123</template>
-            <template #form>
-              <el-form
-                label-width="100px"
-                :model="formLabelAlign"
-                style="max-width: 460px"
-              >
-                <el-form-item label="Name">
-                  <el-input v-model="formLabelAlign.name" />
-                </el-form-item>
-                <el-form-item label="Activity zone">
-                  <el-input v-model="formLabelAlign.region" />
-                </el-form-item>
-                <el-form-item label="Activity form">
-                  <el-input v-model="formLabelAlign.type" />
-                </el-form-item>
-              </el-form>
-            </template>
-          </base-content>
-        </template>
-      </base-list-item>
+    <el-col :span="20" style="height: 100%; overflow: auto" v-scroll-spy>
+      <user-info
+        :form="data.userInfo"
+        :default-state="false"
+        require
+      ></user-info>
       <!-- TODO: 叫评审会真的合适吗？ -->
       <base-list-item title="评审会" require>
         <template #left>
@@ -286,7 +262,24 @@ import { Edit } from "@element-plus/icons";
 import { reactive, ref } from "vue";
 import BaseContent from "@/components/BaseContent.vue";
 import { useRouter } from "vue-router";
+import UserInfo from "@/components/UserInfo.vue";
+import { UserDetailInformation } from "@/@types/model";
 
+const menuList = reactive([
+  "个人信息",
+  "评审会",
+  "学历情况",
+  "工作经历",
+  "主要经历",
+  "行政政务",
+  "论文",
+  "业绩成果",
+  "专利",
+  "承诺书",
+]);
+const data = reactive({
+  userInfo: {} as UserDetailInformation,
+});
 const activeIndex = ref("个人信息");
 const state = ref(false);
 const formLabelAlign = reactive({
@@ -304,4 +297,36 @@ const move = (index: string) => {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+nav ul li {
+  display: flex;
+  align-items: center;
+  list-style: none;
+}
+
+nav ul li b {
+  display: none;
+}
+
+nav ul li a {
+  margin-left: 12px;
+  font-size: 18px;
+  font-weight: bold;
+  color: rgb(200, 201, 204);
+  cursor: pointer;
+}
+
+nav ul li.active b {
+  display: inline-block;
+  width: 4px;
+  height: 20px;
+  /* 应设置为 var 变量 */
+  background: #409eff;
+  border-radius: 3px;
+  margin-top: 2px;
+}
+nav ul li.active a {
+  margin-left: 8px;
+  color: #409eff;
+}
+</style>

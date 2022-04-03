@@ -11,11 +11,11 @@ const routes: Array<RouteRecordRaw> = [
     path: "/404",
     component: () => import("../views/common/404.vue"),
   },
-  // {
-  //   path: "/",
-  //   name: "Temp",
-  //   component: Temp,
-  // },
+  {
+    path: "/test",
+    name: "Temp",
+    component: Temp,
+  },
   {
     path: "/",
     redirect: "/person/login",
