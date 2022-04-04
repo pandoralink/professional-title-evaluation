@@ -13,7 +13,7 @@
       <el-menu-item index="2-2" route="/person/404">2</el-menu-item>
     </el-sub-menu>
     <el-menu-item index="3" route="/person/404">消息中心</el-menu-item>
-    <el-menu-item index="4" route="/person/404">个人中心</el-menu-item>
+    <el-menu-item index="4" route="/person/personSite">个人中心</el-menu-item>
   </el-menu>
 </template>
 

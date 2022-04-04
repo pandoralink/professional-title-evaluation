@@ -22,7 +22,8 @@
       <user-info
         :form="data.userInfo"
         :default-state="false"
-        require
+        @update-form="updateUserInfo"
+        :require="data.userInfo.id === undefined"
       ></user-info>
       <!-- TODO: 叫评审会真的合适吗？ -->
       <base-list-item title="评审会" require>
@@ -295,6 +296,9 @@ const move = (index: string) => {
   activeIndex.value = index;
   router.push(index);
 };
+const updateUserInfo = (form: UserDetailInformation) => {
+  data.userInfo = form;
+};
 </script>
 
 <style scoped>
@@ -302,6 +306,7 @@ nav ul li {
   display: flex;
   align-items: center;
   list-style: none;
+  padding: 10px 0;
 }
 
 nav ul li b {
