@@ -42,7 +42,6 @@
       >
         <div v-if="isLogin" style="width: 100%; height: 100%">
           <el-row justify="center"><h1>登录</h1></el-row>
-          <!-- TODO: 登录的表单需要什么呢？ -->
           <el-form
             id="login-form"
             :model="loginData"
@@ -50,16 +49,16 @@
             :rules="rules"
             inline-message
           >
-            <el-form-item prop="user" style="margin: 24px 0px 48px 0">
+            <el-form-item prop="account" style="margin: 24px 0 48px 0">
               <el-input
                 class="login-input"
                 size="large"
-                v-model="loginData.user"
+                v-model="loginData.account"
                 type="text"
                 placeholder="账号"
               />
             </el-form-item>
-            <el-form-item prop="password" style="margin: 24px 0px 48px 0">
+            <el-form-item prop="password" style="margin: 24px 0 48px 0">
               <el-input
                 class="login-input"
                 size="large"
@@ -92,7 +91,6 @@
         </div>
         <div v-if="!isLogin" style="width: 100%; height: 100%">
           <el-row justify="center"><h1>注册</h1></el-row>
-          <!-- TODO: 注册的表单需要什么呢？ -->
           <el-form
             id="register-form"
             :model="registerData"
@@ -100,16 +98,16 @@
             :rules="rules"
             inline-message
           >
-            <el-form-item prop="user" style="margin: 24px 0px 48px 0">
+            <el-form-item prop="account" style="margin: 24px 0 48px 0">
               <el-input
                 class="login-input"
                 size="large"
-                v-model="registerData.user"
+                v-model="registerData.account"
                 type="text"
                 placeholder="账号"
               />
             </el-form-item>
-            <el-form-item prop="password" style="margin: 24px 0px 48px 0">
+            <el-form-item prop="password" style="margin: 24px 0 48px 0">
               <el-input
                 class="login-input"
                 size="large"
@@ -145,25 +143,27 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 import { ElMessage } from "element-plus";
 import { useRouter } from "vue-router";
 import { reactive } from "@vue/reactivity";
 import type { ElForm } from "element-plus";
-import { User } from "@/@types/model";
+import { CommonResult, User, UserDetailInformation } from "@/@types/model";
+import { userLogin, userRegister } from "@/api/person/login";
+import { useInfoStore } from "@/store/info";
 
 type FormInstance = InstanceType<typeof ElForm>;
 
 const loginFormRef = ref<FormInstance>();
 const loginData = reactive<User>({
-  user: "",
+  account: "",
   password: "",
 });
 
 const registerFormRef = ref<FormInstance>();
 const registerData = reactive<User>({
   password: "",
-  user: "",
+  account: "",
 });
 
 const rules = reactive({
@@ -188,16 +188,19 @@ const loginSubmitForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   formEl.validate(async (valid) => {
     if (valid) {
-      router.push("/person/manage");
-      ElMessage.success("自动跳转");
-      // const { data } = await login(loginData);
-      // const res = data as Result;
-      // if (res.code === 0) {
-      //   router.push("/manage");
-      //   ElMessage.success(res.msg);
-      // } else {
-      //   ElMessage.error(res.msg);
-      // }
+      const { data } = await userLogin(loginData);
+      const res = data as CommonResult;
+      if (res.code === 200) {
+        const infoStore = useInfoStore();
+        const userInfo = res.data as UserDetailInformation;
+        if (userInfo.name === "未设置名字") {
+          userInfo.name = "";
+        }
+        infoStore.updateUserDetail(userInfo);
+        router.push("/person/manage");
+      } else {
+        ElMessage.error(res.message);
+      }
     } else {
       ElMessage.error("输入出错");
       return false;
@@ -209,16 +212,14 @@ const registerSubmitForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   formEl.validate(async (valid) => {
     if (valid) {
-      router.push("/person/manage");
-      ElMessage.success("自动跳转");
-      // const { data } = await register(registerData);
-      // const res = data as Result;
-      // if (res.code === 0) {
-      //   router.push("/manage");
-      //   ElMessage.success(res.msg);
-      // } else {
-      //   ElMessage.error(res.msg);
-      // }
+      const { data } = await userRegister(registerData);
+      const res = data as CommonResult;
+      if (res.code === 200) {
+        router.push("/person/manage");
+        ElMessage.success(res.message);
+      } else {
+        ElMessage.error(res.message);
+      }
     } else {
       ElMessage.error("输入出错");
       return false;

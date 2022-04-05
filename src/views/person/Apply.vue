@@ -21,7 +21,7 @@
     <el-col :span="20" style="height: 100%; overflow: auto" v-scroll-spy>
       <user-info
         :form="data.userInfo"
-        :default-state="false"
+        :default-state="data.userInfo.idCardNumber !== undefined"
         @update-form="updateUserInfo"
         :require="data.userInfo.id === undefined"
       ></user-info>
@@ -265,7 +265,9 @@ import BaseContent from "@/components/BaseContent.vue";
 import { useRouter } from "vue-router";
 import UserInfo from "@/components/UserInfo.vue";
 import { UserDetailInformation } from "@/@types/model";
+import { useInfoStore } from "@/store/info";
 
+const infoStore = useInfoStore();
 const menuList = reactive([
   "个人信息",
   "评审会",
@@ -279,7 +281,7 @@ const menuList = reactive([
   "承诺书",
 ]);
 const data = reactive({
-  userInfo: {} as UserDetailInformation,
+  userInfo: infoStore.state.userDetail,
 });
 const activeIndex = ref("个人信息");
 const state = ref(false);
@@ -292,12 +294,9 @@ const router = useRouter();
 const updateState = (value: boolean) => {
   state.value = value;
 };
-const move = (index: string) => {
-  activeIndex.value = index;
-  router.push(index);
-};
 const updateUserInfo = (form: UserDetailInformation) => {
   data.userInfo = form;
+  infoStore.updateUserDetail(form);
 };
 </script>
 
@@ -330,6 +329,7 @@ nav ul li.active b {
   border-radius: 3px;
   margin-top: 2px;
 }
+
 nav ul li.active a {
   margin-left: 8px;
   color: #409eff;

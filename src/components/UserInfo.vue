@@ -6,19 +6,21 @@
       </el-button>
     </template>
     <template #content>
-      <div v-if="state" style="display: flex; justify-content: space-between">
+      <div
+        v-if="state && formCopy.name"
+        style="display: flex; justify-content: space-between"
+      >
         <el-row class="content-text" style="min-width: 1000px">
           <el-col :span="7">
             <div>{{ "姓名：" + form.name }}</div>
             <div>{{ "性别：" + form.sex }}</div>
-            <div>{{ "生日：" + form.birthday }}</div>
+            <div>{{ "生日：" + birthday }}</div>
             <div>{{ "联系电话：" + form.phoneNumber }}</div>
             <div>{{ "邮箱：" + form.email }}</div>
             <div>{{ "国家：" + form.nation }}</div>
             <div>{{ "证件号码：" + form.idCardNumber }}</div>
           </el-col>
           <el-col :span="7">
-            <div>{{ "账号：" + form.account }}</div>
             <div>{{ "所属单位：" + form.department }}</div>
             <div>{{ "政治面貌：" + form.politicalAppearance }}</div>
             <div>{{ "个人身份性质：" + form.personalStatus }}</div>
@@ -33,18 +35,32 @@
                   style="
                     width: 240px;
                     text-align: center;
-                    border: 1px solid;
+                    border: 1px dashed #d9d9d9;
                     margin-bottom: 10px;
                   "
                 >
-                  <el-icon class="avatar-uploader-icon">
+                  <img
+                    v-if="formCopy.idCardFrontPhoto"
+                    :src="formCopy.idCardFrontPhoto"
+                    class="avatar"
+                  />
+                  <el-icon v-else class="avatar-uploader-icon">
                     <Plus />
                   </el-icon>
                 </div>
                 <div
-                  style="width: 240px; text-align: center; border: 1px solid"
+                  style="
+                    width: 240px;
+                    text-align: center;
+                    border: 1px dashed #d9d9d9;
+                  "
                 >
-                  <el-icon class="avatar-uploader-icon">
+                  <img
+                    v-if="formCopy.idCardReversePhoto"
+                    :src="formCopy.idCardReversePhoto"
+                    class="avatar"
+                  />
+                  <el-icon v-else class="avatar-uploader-icon">
                     <Plus />
                   </el-icon>
                 </div>
@@ -52,9 +68,18 @@
               <el-col :span="8">
                 <div
                   class="header"
-                  style="width: 120px; text-align: center; border: 1px solid"
+                  style="
+                    width: 120px;
+                    text-align: center;
+                    border: 1px dashed #d9d9d9;
+                  "
                 >
-                  <el-icon class="avatar-uploader-icon">
+                  <img
+                    v-if="formCopy.twoInchPhoto"
+                    :src="formCopy.twoInchPhoto"
+                    class="avatar"
+                  />
+                  <el-icon v-else class="avatar-uploader-icon">
                     <Plus />
                   </el-icon>
                 </div>
@@ -62,18 +87,16 @@
             </el-row>
           </el-col>
         </el-row>
-        <div>
-          <el-button type="primary" @click="toEdit">编辑</el-button>
-          <el-button type="danger">删除</el-button>
-        </div>
       </div>
       <div>
         <div v-if="!state">
           <!-- TODO: 数据库中一些中文字段比如性别、国家和籍贯的值是什么？ -->
           <el-form
+            ref="ruleFormRef"
+            :rules="rules"
+            :model="formCopy"
             style="max-width: 1100px"
             label-width="100px"
-            :model="formCopy"
           >
             <el-row>
               <el-col :span="8">
@@ -81,10 +104,19 @@
                 <el-form-item prop="twoInchPhoto" label="免冠2寸照片" required>
                   <el-upload
                     class="avatar-uploader header"
-                    action="https://jsonplaceholder.typicode.com/posts/"
+                    action="/prefix/upload"
                     :show-file-list="false"
+                    name="files"
+                    with-credentials
+                    :on-success="handleAvatarSuccess"
+                    :before-upload="beforeAvatarUpload"
                   >
-                    <el-icon class="avatar-uploader-icon">
+                    <img
+                      v-if="formCopy.twoInchPhoto"
+                      :src="formCopy.twoInchPhoto"
+                      class="avatar"
+                    />
+                    <el-icon v-else class="avatar-uploader-icon">
                       <Plus />
                     </el-icon>
                   </el-upload>
@@ -104,7 +136,7 @@
             </el-row>
             <el-row>
               <el-col :span="8">
-                <el-form-item prop="birthday" label="生日" required>
+                <el-form-item prop="birthday" label="生日">
                   <el-date-picker
                     v-model="formCopy.birthday"
                     type="date"
@@ -134,11 +166,7 @@
                   <el-input v-model="formCopy.idCardNumber" />
                 </el-form-item>
               </el-col>
-              <el-col :span="8">
-                <el-form-item prop="account" label="账号" required>
-                  <el-input v-model="formCopy.account" />
-                </el-form-item>
-              </el-col>
+              <el-col :span="8"></el-col>
             </el-row>
             <el-row>
               <el-col :span="8">
@@ -185,9 +213,18 @@
                   <el-upload
                     class="avatar-uploader"
                     :show-file-list="false"
-                    action="https://jsonplaceholder.typicode.com/posts/"
+                    action="/prefix/upload"
+                    name="files"
+                    with-credentials
+                    :on-success="handleIdCardFrontPhotoSuccess"
+                    :before-upload="beforeAvatarUpload"
                   >
-                    <el-icon class="avatar-uploader-icon">
+                    <img
+                      v-if="formCopy.idCardFrontPhoto"
+                      :src="formCopy.idCardFrontPhoto"
+                      class="avatar"
+                    />
+                    <el-icon v-else class="avatar-uploader-icon">
                       <Plus />
                     </el-icon>
                   </el-upload>
@@ -202,9 +239,18 @@
                   <el-upload
                     class="avatar-uploader"
                     :show-file-list="false"
-                    action="https://jsonplaceholder.typicode.com/posts/"
+                    action="/prefix/upload"
+                    name="files"
+                    with-credentials
+                    :on-success="handleIdCardReversePhotoSuccess"
+                    :before-upload="beforeAvatarUpload"
                   >
-                    <el-icon class="avatar-uploader-icon">
+                    <img
+                      v-if="formCopy.idCardReversePhoto"
+                      :src="formCopy.idCardReversePhoto"
+                      class="avatar"
+                    />
+                    <el-icon v-else class="avatar-uploader-icon">
                       <Plus />
                     </el-icon>
                   </el-upload>
@@ -231,7 +277,9 @@
             </el-row>
             <el-row justify="center">
               <el-button @click="toShow">取消</el-button>
-              <el-button type="primary" @click="save">保存</el-button>
+              <el-button type="primary" @click="save(ruleFormRef)"
+                >保存
+              </el-button>
             </el-row>
           </el-form>
         </div>
@@ -242,9 +290,13 @@
 
 <script lang="ts" setup>
 import { UserDetailInformation } from "@/@types/model";
-import { reactive, ref, toRaw } from "vue";
+import { computed, reactive, ref, toRaw, watch } from "vue";
 import BaseListItem from "@/components/BaseListItem.vue";
 import { Edit, Plus } from "@element-plus/icons";
+import { ElMessage } from "element-plus";
+import type { UploadProps } from "element-plus";
+import { dayjs } from "element-plus/es";
+import type { FormInstance } from "element-plus";
 
 interface Props {
   /**
@@ -266,9 +318,136 @@ const emits = defineEmits<{
 }>();
 
 const state = ref(props.defaultState);
+
+watch(
+  () => props.defaultState,
+  (value, oldValue) => (state.value = value)
+);
+
 const formCopy = reactive(
   Object.assign({}, toRaw(props.form)) as UserDetailInformation
 );
+
+const birthday = computed(() => dayjs(formCopy.birthday).format("YYYY-MM-DD"));
+
+const ruleFormRef = ref<FormInstance>();
+
+const rules = reactive({
+  name: [
+    {
+      required: true,
+      message: "未填写姓名",
+      trigger: "blur",
+    },
+  ],
+  birthday: [
+    {
+      type: "date",
+      required: true,
+      message: "请选择生日",
+      trigger: "blur",
+    },
+  ],
+  email: [
+    {
+      required: true,
+      message: "未填写邮箱",
+      trigger: "blur",
+    },
+    {
+      type: "email",
+      message: "邮箱格式错误",
+      trigger: "blur",
+    },
+  ],
+  idCardFrontPhoto: {
+    required: true,
+    message: "未上传图片",
+    trigger: "blur",
+  },
+  idCardReversePhoto: {
+    required: true,
+    message: "未上传图片",
+    trigger: "blur",
+  },
+  twoInchPhoto: {
+    required: true,
+    message: "未上传图片",
+    trigger: "blur",
+  },
+  address: {
+    required: true,
+    message: "未填写",
+    trigger: "blur",
+  },
+  executive: {
+    required: true,
+    message: "未填写",
+    trigger: "blur",
+  },
+  origin: {
+    required: true,
+    message: "未填写",
+    trigger: "blur",
+  },
+  phoneNumber: {
+    required: true,
+    message: "未填写",
+    trigger: "blur",
+  },
+  personalStatus: {
+    required: true,
+    message: "未填写",
+    trigger: "blur",
+  },
+  politicalAppearance: {
+    required: true,
+    message: "未填写",
+    trigger: "blur",
+  },
+  department: {
+    required: true,
+    message: "未填写",
+    trigger: "blur",
+  },
+  sex: {
+    required: true,
+    message: "未填写",
+    trigger: "blur",
+  },
+  idCardNumber: [
+    {
+      required: true,
+      message: "未填写",
+      trigger: "blur",
+    },
+    {
+      type: "string",
+      pattern:
+        /[1-9]\d{5}(18|19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]/,
+      trigger: "blur",
+      message: "格式错误",
+    },
+  ],
+  nation: {
+    required: true,
+    message: "未填写",
+    trigger: "blur",
+  },
+});
+
+const save = async (formEl: FormInstance | undefined) => {
+  if (!formEl) return;
+  await formEl.validate((valid, fields) => {
+    if (valid) {
+      emits("updateForm", formCopy);
+      toShow();
+    } else {
+      console.log(fields);
+      ElMessage.error(`填写错误${fields}`);
+    }
+  });
+};
 
 const toShow = () => {
   state.value = true;
@@ -276,13 +455,46 @@ const toShow = () => {
 const toEdit = () => {
   state.value = false;
 };
-const save = () => {
-  // TODO: 需要 emit 修改原数据，暂时只修改 copy 数据
-  toShow();
-  emits("updateForm", formCopy);
+
+const handleAvatarSuccess: UploadProps["onSuccess"] = (
+  response,
+  uploadFile
+) => {
+  formCopy.twoInchPhoto = URL.createObjectURL(uploadFile.raw!);
+};
+const handleIdCardFrontPhotoSuccess: UploadProps["onSuccess"] = (
+  response,
+  uploadFile
+) => {
+  formCopy.idCardFrontPhoto = URL.createObjectURL(uploadFile.raw!);
+};
+const handleIdCardReversePhotoSuccess: UploadProps["onSuccess"] = (
+  response,
+  uploadFile
+) => {
+  formCopy.idCardReversePhoto = URL.createObjectURL(uploadFile.raw!);
+};
+
+const beforeAvatarUpload: UploadProps["beforeUpload"] = (rawFile) => {
+  if (rawFile.type !== "image/jpeg") {
+    ElMessage.error("图片格式错误");
+    return false;
+  }
+  return true;
 };
 </script>
 
+<style scoped>
+.avatar {
+  width: 240px;
+  height: 120px;
+}
+
+.header .avatar {
+  width: 120px;
+  height: 120px;
+}
+</style>
 <style>
 .avatar-uploader .el-upload {
   border: 1px dashed #d9d9d9;
