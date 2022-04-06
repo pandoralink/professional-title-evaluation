@@ -25,6 +25,13 @@
         @update-form="updateUserInfo"
         :require="data.userInfo.id === undefined"
       ></user-info>
+      <education-form
+        :form="data.education2"
+        :default-state="data.education.length === 0"
+        @update-form="updateUserInfo"
+        require
+      >
+      </education-form>
       <!-- TODO: 叫评审会真的合适吗？ -->
       <base-list-item title="评审会" require>
         <template #left>
@@ -264,8 +271,9 @@ import { reactive, ref } from "vue";
 import BaseContent from "@/components/BaseContent.vue";
 import { useRouter } from "vue-router";
 import UserInfo from "@/components/UserInfo.vue";
-import { UserDetailInformation } from "@/@types/model";
+import { Education, UserDetailInformation } from "@/@types/model";
 import { useInfoStore } from "@/store/info";
+import EducationForm from "@/components/EducationForm.vue";
 
 const infoStore = useInfoStore();
 const menuList = reactive([
@@ -282,6 +290,8 @@ const menuList = reactive([
 ]);
 const data = reactive({
   userInfo: infoStore.state.userDetail,
+  education: infoStore.state.education,
+  education2: {} as Education,
 });
 const activeIndex = ref("个人信息");
 const state = ref(false);

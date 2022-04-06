@@ -18,7 +18,7 @@ export interface Department {
   password: string;
 }
 
-export interface Education {
+export interface Education extends FormState {
   id: number;
   userId: number;
   graduationTime: string;

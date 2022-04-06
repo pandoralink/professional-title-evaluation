@@ -6,88 +6,87 @@
       </el-button>
     </template>
     <template #content>
-      <div
+      <el-row
         v-if="state && formCopy.name"
-        style="display: flex; justify-content: space-between"
+        class="content-text"
+        style="min-width: 1000px"
       >
-        <el-row class="content-text" style="min-width: 1000px">
-          <el-col :span="7">
-            <div>{{ "姓名：" + form.name }}</div>
-            <div>{{ "性别：" + form.sex }}</div>
-            <div>{{ "生日：" + birthday }}</div>
-            <div>{{ "联系电话：" + form.phoneNumber }}</div>
-            <div>{{ "邮箱：" + form.email }}</div>
-            <div>{{ "国家：" + form.nation }}</div>
-            <div>{{ "证件号码：" + form.idCardNumber }}</div>
-          </el-col>
-          <el-col :span="7">
-            <div>{{ "所属单位：" + form.department }}</div>
-            <div>{{ "政治面貌：" + form.politicalAppearance }}</div>
-            <div>{{ "个人身份性质：" + form.personalStatus }}</div>
-            <div>{{ "籍贯：" + form.origin }}</div>
-            <div>{{ "联系地址：" + form.address }}</div>
-            <div>{{ "行政职务：" + form.executive }}</div>
-          </el-col>
-          <el-col :span="10">
-            <el-row align="middle">
-              <el-col :span="16">
-                <div
-                  style="
-                    width: 240px;
-                    text-align: center;
-                    border: 1px dashed #d9d9d9;
-                    margin-bottom: 10px;
-                  "
-                >
-                  <img
-                    v-if="formCopy.idCardFrontPhoto"
-                    :src="formCopy.idCardFrontPhoto"
-                    class="avatar"
-                  />
-                  <el-icon v-else class="avatar-uploader-icon">
-                    <Plus />
-                  </el-icon>
-                </div>
-                <div
-                  style="
-                    width: 240px;
-                    text-align: center;
-                    border: 1px dashed #d9d9d9;
-                  "
-                >
-                  <img
-                    v-if="formCopy.idCardReversePhoto"
-                    :src="formCopy.idCardReversePhoto"
-                    class="avatar"
-                  />
-                  <el-icon v-else class="avatar-uploader-icon">
-                    <Plus />
-                  </el-icon>
-                </div>
-              </el-col>
-              <el-col :span="8">
-                <div
-                  class="header"
-                  style="
-                    width: 120px;
-                    text-align: center;
-                    border: 1px dashed #d9d9d9;
-                  "
-                >
-                  <img
-                    v-if="formCopy.twoInchPhoto"
-                    :src="formCopy.twoInchPhoto"
-                    class="avatar"
-                  />
-                  <el-icon v-else class="avatar-uploader-icon">
-                    <Plus />
-                  </el-icon>
-                </div>
-              </el-col>
-            </el-row>
-          </el-col>
-        </el-row>
-      </div>
+        <el-col :span="7">
+          <div>{{ "姓名：" + form.name }}</div>
+          <div>{{ "性别：" + form.sex }}</div>
+          <div>{{ "生日：" + birthday }}</div>
+          <div>{{ "联系电话：" + form.phoneNumber }}</div>
+          <div>{{ "邮箱：" + form.email }}</div>
+          <div>{{ "国家：" + form.nation }}</div>
+          <div>{{ "证件号码：" + form.idCardNumber }}</div>
+        </el-col>
+        <el-col :span="7">
+          <div>{{ "所属单位：" + form.department }}</div>
+          <div>{{ "政治面貌：" + form.politicalAppearance }}</div>
+          <div>{{ "个人身份性质：" + form.personalStatus }}</div>
+          <div>{{ "籍贯：" + form.origin }}</div>
+          <div>{{ "联系地址：" + form.address }}</div>
+          <div>{{ "行政职务：" + form.executive }}</div>
+        </el-col>
+        <el-col :span="10">
+          <el-row align="middle">
+            <el-col :span="16">
+              <div
+                style="
+                  width: 240px;
+                  text-align: center;
+                  border: 1px dashed #d9d9d9;
+                  margin-bottom: 10px;
+                "
+              >
+                <img
+                  v-if="formCopy.idCardFrontPhoto"
+                  :src="formCopy.idCardFrontPhoto"
+                  class="avatar"
+                />
+                <el-icon v-else class="avatar-uploader-icon">
+                  <Plus />
+                </el-icon>
+              </div>
+              <div
+                style="
+                  width: 240px;
+                  text-align: center;
+                  border: 1px dashed #d9d9d9;
+                "
+              >
+                <img
+                  v-if="formCopy.idCardReversePhoto"
+                  :src="formCopy.idCardReversePhoto"
+                  class="avatar"
+                />
+                <el-icon v-else class="avatar-uploader-icon">
+                  <Plus />
+                </el-icon>
+              </div>
+            </el-col>
+            <el-col :span="8">
+              <div
+                class="header"
+                style="
+                  width: 120px;
+                  text-align: center;
+                  border: 1px dashed #d9d9d9;
+                "
+              >
+                <img
+                  v-if="formCopy.twoInchPhoto"
+                  :src="formCopy.twoInchPhoto"
+                  class="avatar"
+                />
+                <el-icon v-else class="avatar-uploader-icon">
+                  <Plus />
+                </el-icon>
+              </div>
+            </el-col>
+          </el-row>
+        </el-col>
+      </el-row>
       <div>
         <div v-if="!state">
           <!-- TODO: 数据库中一些中文字段比如性别、国家和籍贯的值是什么？ -->
@@ -436,6 +435,7 @@ const rules = reactive({
   },
 });
 
+// TODO: 可能需要加一个状态位来确保是否已经完成校验，并借此判断是否需要展示 content
 const save = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   await formEl.validate((valid, fields) => {
@@ -443,8 +443,7 @@ const save = async (formEl: FormInstance | undefined) => {
       emits("updateForm", formCopy);
       toShow();
     } else {
-      console.log(fields);
-      ElMessage.error(`填写错误${fields}`);
+      ElMessage.error(`填写错误`);
     }
   });
 };
