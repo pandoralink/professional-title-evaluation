@@ -25,13 +25,7 @@
         @update-form="updateUserInfo"
         :require="data.userInfo.id === undefined"
       ></user-info>
-      <education-form
-        :form="data.education2"
-        :default-state="data.education.length === 0"
-        @update-form="updateUserInfo"
-        require
-      >
-      </education-form>
+      <education-form require></education-form>
       <!-- TODO: 叫评审会真的合适吗？ -->
       <base-list-item title="评审会" require>
         <template #left>
@@ -271,11 +265,23 @@ import { reactive, ref } from "vue";
 import BaseContent from "@/components/BaseContent.vue";
 import { useRouter } from "vue-router";
 import UserInfo from "@/components/UserInfo.vue";
-import { Education, UserDetailInformation } from "@/@types/model";
+import { CommonResult, Education, UserDetailInformation } from "@/@types/model";
 import { useInfoStore } from "@/store/info";
 import EducationForm from "@/components/EducationForm.vue";
+import { getEducation } from "@/api/person/education";
+import { ElMessage } from "element-plus";
+import { toArray } from "@/utils/filter";
 
 const infoStore = useInfoStore();
+const init = (async () => {
+  const { data } = await getEducation(infoStore.state.userDetail.id);
+  const res = data as CommonResult;
+  if (res.code !== 200) {
+    ElMessage.error(res.message);
+    return;
+  }
+  infoStore.updateEducations(toArray(res.data) as Education[]);
+})();
 const menuList = reactive([
   "个人信息",
   "评审会",
@@ -290,10 +296,8 @@ const menuList = reactive([
 ]);
 const data = reactive({
   userInfo: infoStore.state.userDetail,
-  education: infoStore.state.education,
-  education2: {} as Education,
+  educations: infoStore.state.educations,
 });
-const activeIndex = ref("个人信息");
 const state = ref(false);
 const formLabelAlign = reactive({
   name: "",

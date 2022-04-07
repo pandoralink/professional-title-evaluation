@@ -8,14 +8,22 @@ import { Education, UserDetailInformation } from "@/@types/model";
 export const useInfoStore = defineStore("info", () => {
   const state = reactive({
     userDetail: {} as UserDetailInformation,
-    education: [] as Education[],
+    educations: [] as Education[],
   });
   const updateUserDetail = (data: UserDetailInformation) => {
     state.userDetail = data;
+  };
+  const updateEducations = (data: Education[]) => {
+    state.educations = data;
+  };
+  const deleteEducation = (index: number) => {
+    state.educations.splice(index, 1);
   };
 
   return {
     state,
     updateUserDetail,
+    educations: state.educations,
+    updateEducations,
   };
 });
