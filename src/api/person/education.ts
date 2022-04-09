@@ -1,13 +1,10 @@
 import axios from "@/utils/axios";
 import { Education } from "@/@types/model";
 
-export const getEducation = (id: number) => {
+export const getEducation = () => {
   return axios({
-    url: "/education",
+    url: "/education/list",
     method: "get",
-    params: {
-      id,
-    },
   });
 };
 

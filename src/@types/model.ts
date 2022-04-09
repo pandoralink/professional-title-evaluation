@@ -154,3 +154,13 @@ export interface WorkExperience {
   participationTime: string;
   materials: string[];
 }
+
+/**
+ * formRef: 实际属性为 FormInstance
+ */
+export interface ReviewFormData<T> {
+  formRef: any;
+  value: T;
+  originalValue: T;
+  edit: boolean;
+}

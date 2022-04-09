@@ -157,8 +157,8 @@ const formCopy = reactive<
   }[]
 >([]);
 
-if (Array.isArray(store.educations)) {
-  for (const education of store.educations) {
+if (Array.isArray(store.state.educations)) {
+  for (const education of store.state.educations) {
     const formRef = ref<FormInstance>();
     formCopy.push({
       formRef,
@@ -256,7 +256,7 @@ const save = async (value: {
           ElMessage.error(res.message);
           return;
         }
-        value.education = res.data as Education;
+        value.education.id = res.data as number;
       } else {
         // update
         const { data } = await updateEducation(value.education);

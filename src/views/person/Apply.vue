@@ -25,7 +25,6 @@
         @update-form="updateUserInfo"
         :require="data.userInfo.id === undefined"
       ></user-info>
-      <education-form require></education-form>
       <!-- TODO: 叫评审会真的合适吗？ -->
       <base-list-item title="评审会" require>
         <template #left>
@@ -54,61 +53,9 @@
           </base-content>
         </template>
       </base-list-item>
-      <base-list-item title="学历情况" require>
-        <template #left>
-          <el-button type="primary" :icon="Edit" circle />
-        </template>
-        <template #content>
-          <base-content :state="state" @update-state="updateState">
-            <template #content>123</template>
-            <template #form>
-              <el-form
-                label-width="100px"
-                :model="formLabelAlign"
-                style="max-width: 460px"
-              >
-                <el-form-item label="Name">
-                  <el-input v-model="formLabelAlign.name" />
-                </el-form-item>
-                <el-form-item label="Activity zone">
-                  <el-input v-model="formLabelAlign.region" />
-                </el-form-item>
-                <el-form-item label="Activity form">
-                  <el-input v-model="formLabelAlign.type" />
-                </el-form-item>
-              </el-form>
-            </template>
-          </base-content>
-        </template>
-      </base-list-item>
-      <base-list-item title="工作经历" require>
-        <template #left>
-          <el-button type="primary" :icon="Edit" circle />
-        </template>
-        <template #content>
-          <base-content :state="state" @update-state="updateState">
-            <template #content>123</template>
-            <template #form>
-              <el-form
-                label-width="100px"
-                :model="formLabelAlign"
-                style="max-width: 460px"
-              >
-                <el-form-item label="Name">
-                  <el-input v-model="formLabelAlign.name" />
-                </el-form-item>
-                <el-form-item label="Activity zone">
-                  <el-input v-model="formLabelAlign.region" />
-                </el-form-item>
-                <el-form-item label="Activity form">
-                  <el-input v-model="formLabelAlign.type" />
-                </el-form-item>
-              </el-form>
-            </template>
-          </base-content>
-        </template>
-      </base-list-item>
-      <base-list-item title="主要经历" require>
+      <education-form require></education-form>
+      <work-experience require></work-experience>
+      <base-list-item title="工作总结" require>
         <template #left>
           <el-button type="primary" :icon="Edit" circle />
         </template>
@@ -267,14 +214,15 @@ import { useRouter } from "vue-router";
 import UserInfo from "@/components/UserInfo.vue";
 import { CommonResult, Education, UserDetailInformation } from "@/@types/model";
 import { useInfoStore } from "@/store/info";
-import EducationForm from "@/components/EducationForm.vue";
+import EducationForm from "@/components/person/EducationForm.vue";
 import { getEducation } from "@/api/person/education";
 import { ElMessage } from "element-plus";
 import { toArray } from "@/utils/filter";
+import WorkExperience from "@/components/person/WorkExperience.vue";
 
 const infoStore = useInfoStore();
 const init = (async () => {
-  const { data } = await getEducation(infoStore.state.userDetail.id);
+  const { data } = await getEducation();
   const res = data as CommonResult;
   if (res.code !== 200) {
     ElMessage.error(res.message);
@@ -287,7 +235,7 @@ const menuList = reactive([
   "评审会",
   "学历情况",
   "工作经历",
-  "主要经历",
+  "工作总结",
   "行政政务",
   "论文",
   "业绩成果",
