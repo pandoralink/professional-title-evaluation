@@ -1,7 +1,12 @@
 import { ref } from "vue";
 import { FormInstance } from "element-plus";
-import { ReviewFormData, WorkExperience } from "@/@types/model";
+import { ReviewFormData } from "@/@types/model";
 
+/**
+ * 添加一个空的表单项
+ * @param data
+ * @param isOption
+ */
 export function addEmptyFormItem<T>(data: ReviewFormData<T>[]) {
   data.unshift({
     formRef: ref<FormInstance>(),

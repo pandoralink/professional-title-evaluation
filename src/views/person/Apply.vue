@@ -93,33 +93,7 @@
           </base-content>
         </template>
       </base-list-item>
-      <base-list-item title="论文">
-        <template #left>
-          <el-button type="primary" :icon="Edit" circle />
-        </template>
-        <template #content>
-          <base-content :state="state" @update-state="updateState">
-            <template #content>123</template>
-            <template #form>
-              <el-form
-                label-width="100px"
-                :model="formLabelAlign"
-                style="max-width: 460px"
-              >
-                <el-form-item label="Name">
-                  <el-input v-model="formLabelAlign.name" />
-                </el-form-item>
-                <el-form-item label="Activity zone">
-                  <el-input v-model="formLabelAlign.region" />
-                </el-form-item>
-                <el-form-item label="Activity form">
-                  <el-input v-model="formLabelAlign.type" />
-                </el-form-item>
-              </el-form>
-            </template>
-          </base-content>
-        </template>
-      </base-list-item>
+      <paper />
       <base-list-item title="业绩成果">
         <template #left>
           <el-button type="primary" :icon="Edit" circle />
@@ -219,6 +193,7 @@ import { getEducation } from "@/api/person/education";
 import { ElMessage } from "element-plus";
 import { toArray } from "@/utils/filter";
 import WorkExperience from "@/components/person/WorkExperience.vue";
+import Paper from "@/components/person/Paper.vue";
 
 const infoStore = useInfoStore();
 const init = (async () => {
