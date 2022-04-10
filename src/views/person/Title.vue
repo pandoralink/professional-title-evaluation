@@ -15,7 +15,7 @@
             height: 90px;
             border-radius: 20px;
           "
-          @click="toApply"
+          @click="toReviewMeeting"
           >职称申请
         </el-button>
       </div>
@@ -53,8 +53,8 @@ import { List, QuestionFilled } from "@element-plus/icons";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
-const toApply = () => {
-  router.push("/person/title/apply");
+const toReviewMeeting = () => {
+  router.push("/person/title/review-meeting");
 };
 </script>
 

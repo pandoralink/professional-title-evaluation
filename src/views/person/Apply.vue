@@ -24,7 +24,7 @@
         :default-state="data.userInfo.idCardNumber !== undefined"
         @update-form="updateUserInfo"
         :require="data.userInfo.id === undefined"
-      ></user-info>
+      />
       <!-- TODO: 叫评审会真的合适吗？ -->
       <base-list-item title="评审会" require>
         <template #left>
@@ -53,8 +53,8 @@
           </base-content>
         </template>
       </base-list-item>
-      <education-form require></education-form>
-      <work-experience require></work-experience>
+      <education-form require />
+      <work-experience require />
       <base-list-item title="工作总结" require>
         <template #left>
           <el-button type="primary" :icon="Edit" circle />
@@ -94,60 +94,10 @@
         </template>
       </base-list-item>
       <paper />
-      <base-list-item title="业绩成果">
-        <template #left>
-          <el-button type="primary" :icon="Edit" circle />
-        </template>
-        <template #content>
-          <base-content :state="state" @update-state="updateState">
-            <template #content>123</template>
-            <template #form>
-              <el-form
-                label-width="100px"
-                :model="formLabelAlign"
-                style="max-width: 460px"
-              >
-                <el-form-item label="Name">
-                  <el-input v-model="formLabelAlign.name" />
-                </el-form-item>
-                <el-form-item label="Activity zone">
-                  <el-input v-model="formLabelAlign.region" />
-                </el-form-item>
-                <el-form-item label="Activity form">
-                  <el-input v-model="formLabelAlign.type" />
-                </el-form-item>
-              </el-form>
-            </template>
-          </base-content>
-        </template>
-      </base-list-item>
-      <base-list-item title="专利">
-        <template #left>
-          <el-button type="primary" :icon="Edit" circle />
-        </template>
-        <template #content>
-          <base-content :state="state" @update-state="updateState">
-            <template #content>123</template>
-            <template #form>
-              <el-form
-                label-width="100px"
-                :model="formLabelAlign"
-                style="max-width: 460px"
-              >
-                <el-form-item label="Name">
-                  <el-input v-model="formLabelAlign.name" />
-                </el-form-item>
-                <el-form-item label="Activity zone">
-                  <el-input v-model="formLabelAlign.region" />
-                </el-form-item>
-                <el-form-item label="Activity form">
-                  <el-input v-model="formLabelAlign.type" />
-                </el-form-item>
-              </el-form>
-            </template>
-          </base-content>
-        </template>
-      </base-list-item>
+      <performance-award />
+      <performance-patent />
+      <performance-result />
+      <talent-introduction-material />
       <base-list-item title="承诺书">
         <template #left>
           <el-button type="primary" :icon="Edit" circle />
@@ -194,6 +144,10 @@ import { ElMessage } from "element-plus";
 import { toArray } from "@/utils/filter";
 import WorkExperience from "@/components/person/WorkExperience.vue";
 import Paper from "@/components/person/Paper.vue";
+import PerformanceAward from "@/components/person/PerformanceAward.vue";
+import PerformancePatent from "@/components/person/PerformancePatent.vue";
+import PerformanceResult from "@/components/person/PerformanceResult.vue";
+import TalentIntroductionMaterial from "@/components/person/TalentIntroductionMaterial.vue";
 
 const infoStore = useInfoStore();
 const init = (async () => {
@@ -213,8 +167,10 @@ const menuList = reactive([
   "工作总结",
   "行政政务",
   "论文",
+  "业绩奖励",
+  "业绩专利",
   "业绩成果",
-  "专利",
+  "人才引进材料",
   "承诺书",
 ]);
 const data = reactive({

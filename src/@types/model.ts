@@ -99,12 +99,6 @@ export interface ReviewFormSimple {
   status: string;
 }
 
-export interface ReviewMeeting {
-  id: number;
-  departmentId: number;
-  name: string;
-}
-
 export interface TalentIntroductionMaterial {
   id: number;
   reviewFormId: number;
@@ -163,4 +157,11 @@ export interface ReviewFormData<T> {
   value: T;
   originalValue: T;
   edit: boolean;
+}
+
+export interface ReviewMeeting {
+  id: number | undefined;
+  name: string;
+  level: string;
+  series: string;
 }

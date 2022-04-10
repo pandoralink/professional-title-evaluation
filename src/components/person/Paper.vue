@@ -62,7 +62,7 @@
             </el-col>
             <el-col :span="8">
               <el-form-item prop="role" label="论文角色">
-                <el-select v-model="item.value.category" placeholder="论文角色">
+                <el-select v-model="item.value.role" placeholder="论文角色">
                   <el-option label="论文构思" value="论文构思" />
                   <el-option label="数据管理" value="数据管理" />
                   <el-option label="形式分析" value="形式分析" />

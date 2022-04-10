@@ -1,9 +1,11 @@
 <template>
-  <base-list-item title="个人信息" :require="require">
+  <base-list-item title="评审会" :require="require">
     <template #left>
-      <el-button type="primary" :icon="Edit" round @click="toEdit">
-        编辑
-      </el-button>
+      <slot name="left">
+        <el-button type="primary" :icon="Edit" round @click="toEdit">
+          编辑
+        </el-button>
+      </slot>
     </template>
     <template #content>
       <el-row
