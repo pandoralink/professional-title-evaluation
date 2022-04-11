@@ -1,24 +1,7 @@
 <template>
   <el-row style="height: 100%; background: white; border-radius: 20px">
-    <el-col :span="18" style="padding: 0 20px"
-      ><h2>职称业务办理</h2>
-      <div style="display: flex; flex-wrap: wrap">
-        <el-button
-          v-for="i in 5"
-          :key="i"
-          :icon="List"
-          style="
-            font-weight: bold;
-            margin: 10px;
-            font-size: 28px;
-            flex: 0 0 20%;
-            height: 90px;
-            border-radius: 20px;
-          "
-          @click="toReviewMeeting"
-          >职称申请
-        </el-button>
-      </div>
+    <el-col :span="18" style="padding: 0 20px">
+      <router-view></router-view>
     </el-col>
     <el-col :span="6"
       ><h2 style="color: #67c23a">帮助中心</h2>
@@ -49,13 +32,7 @@
 </template>
 
 <script lang="ts" setup>
-import { List, QuestionFilled } from "@element-plus/icons";
-import { useRouter } from "vue-router";
-
-const router = useRouter();
-const toReviewMeeting = () => {
-  router.push("/person/title/review-meeting");
-};
+import { QuestionFilled } from "@element-plus/icons";
 </script>
 
 <style scoped></style>

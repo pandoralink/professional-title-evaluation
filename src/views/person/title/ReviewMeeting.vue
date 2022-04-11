@@ -1,79 +1,53 @@
 <template>
-  <el-row style="height: 100%; background: white; border-radius: 20px">
-    <el-col :span="18" style="padding: 0 20px"
-      ><h2>职称申请</h2>
-      <el-form
-        ref="ruleFormRef"
-        :rules="rules"
-        :model="state"
-        style="max-width: 500px"
-        label-width="100px"
-      >
-        <el-form-item label="申报年度">
-          <span>{{ year }}</span>
-        </el-form-item>
-        <el-form-item prop="level" label="申报等级">
-          <el-radio-group v-model="state.level">
-            <el-radio label="初级">初级</el-radio>
-            <el-radio label="中级">中级</el-radio>
-            <el-radio label="副高级">副高级</el-radio>
-            <el-radio label="正高级">正高级</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item prop="series" label="申报系列">
-          <el-select v-model="state.series" placeholder="申报系列">
-            <el-option
-              v-for="item in series"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item prop="level" filterable label="申报评审会">
-          <el-select v-model="state.id" placeholder="申报评审会">
-            <el-option
-              v-for="name in names"
-              :key="name.value"
-              :label="name.label"
-              :value="name.value"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-button @click="reset(ruleFormRef)">重置</el-button>
-          <el-button type="primary" @click="submit(ruleFormRef)"
-            >申报
-          </el-button>
-        </el-form-item>
-      </el-form>
-    </el-col>
-    <el-col :span="6"
-      ><h2 style="color: #67c23a">帮助中心</h2>
-      <template v-for="i in 3" :key="i">
-        <h3 style="color: #67c23a; display: flex; align-items: center">
-          <el-icon color="#67c23a" style="margin-right: 16px">
-            <question-filled></question-filled>
-          </el-icon>
-          账户管理
-        </h3>
-        <ul style="padding-left: 16px">
-          <li
-            v-for="i in 3"
-            :key="i"
-            style="
-              color: #c8c9cc;
-              list-style-type: none;
-              font-weight: bold;
-              margin: 10px 0;
-            "
-          >
-            如何获取和登录个人账户
-          </li>
-        </ul>
-      </template>
-    </el-col>
-  </el-row>
+  <h2>职称申请</h2>
+  <el-alert
+    title="温馨提示：申报人员在同一年度，只能申报同一级别的职称一次"
+    type="info"
+    style="margin: 20px 0"
+  />
+  <el-form
+    ref="ruleFormRef"
+    :rules="rules"
+    :model="state"
+    style="max-width: 500px"
+    label-width="100px"
+  >
+    <el-form-item label="申报年度">
+      <span>{{ year }}</span>
+    </el-form-item>
+    <el-form-item prop="level" label="申报等级">
+      <el-radio-group v-model="state.level">
+        <el-radio label="初级">初级</el-radio>
+        <el-radio label="中级">中级</el-radio>
+        <el-radio label="副高级">副高级</el-radio>
+        <el-radio label="正高级">正高级</el-radio>
+      </el-radio-group>
+    </el-form-item>
+    <el-form-item prop="series" label="申报系列">
+      <el-select v-model="state.series" placeholder="申报系列">
+        <el-option
+          v-for="item in series"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        />
+      </el-select>
+    </el-form-item>
+    <el-form-item prop="level" filterable label="申报评审会">
+      <el-select v-model="state.id" placeholder="申报评审会">
+        <el-option
+          v-for="name in names"
+          :key="name.value"
+          :label="name.label"
+          :value="name.value"
+        />
+      </el-select>
+    </el-form-item>
+    <el-form-item>
+      <el-button @click="reset(ruleFormRef)">重置</el-button>
+      <el-button type="primary" @click="submit(ruleFormRef)">申报</el-button>
+    </el-form-item>
+  </el-form>
 </template>
 
 <script lang="ts" setup>

@@ -36,22 +36,32 @@ const routes: Array<RouteRecordRaw> = [
     children: [
       {
         path: "",
-        component: () => import("../views/person/Title.vue"),
-      },
-      {
-        path: "/person/title",
         name: "Title",
-        component: () => import("../views/person/Title.vue"),
+        alias: "/person/title",
+        component: () => import("../views/person/title/Title.vue"),
+        children: [
+          {
+            path: "",
+            component: () => import("../views/person/title/TitleOption.vue"),
+            alias: "title-option",
+          },
+          {
+            path: "review-meeting",
+            name: "ReviewMeeting",
+            component: () => import("../views/person/title/ReviewMeeting.vue"),
+          },
+          {
+            path: "review-form-record",
+            name: "ReviewFormRecord",
+            component: () =>
+              import("../views/person/title/ReviewFormRecord.vue"),
+          },
+        ],
       },
       {
         path: "/person/title/apply",
         name: "Apply",
         component: () => import("../views/person/Apply.vue"),
-      },
-      {
-        path: "/person/title/review-meeting",
-        name: "ReviewMeeting",
-        component: () => import("../views/person/ReviewMeeting.vue"),
       },
       {
         path: "/person/404",

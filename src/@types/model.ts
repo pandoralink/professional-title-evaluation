@@ -88,6 +88,12 @@ export interface ReviewFormDetailed {
   reviewFormSimple: ReviewFormSimple;
 }
 
+enum ReviewStatus {
+  DONE = "已审核",
+  PREPARE = "待审核",
+  UNFINISHED = "未完成",
+}
+
 export interface ReviewFormSimple {
   id: number;
   userId: number;
@@ -96,7 +102,9 @@ export interface ReviewFormSimple {
   rateSeriesId: string;
   rateSpecialtyId: string;
   reviewMeetingId: number;
-  status: string;
+  status: ReviewStatus;
+  level: string;
+  declarationSeries: string;
 }
 
 export interface TalentIntroductionMaterial {
