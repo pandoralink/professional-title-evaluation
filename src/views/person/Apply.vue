@@ -10,186 +10,156 @@
           padding: 20px 10px;
         "
       >
-        <ul style="margin: 0" v-scroll-spy-active v-scroll-spy-link>
-          <li v-for="(name, index) of menuList" :key="index">
-            <b></b><a>{{ name }}</a>
-          </li>
-        </ul>
+        <el-skeleton :loading="loading" animated>
+          <template #template>
+            <el-skeleton-item v-for="i in 11" :key="i" />
+          </template>
+          <template #default>
+            <ul
+              v-if="!loading"
+              style="margin: 0"
+              v-scroll-spy-active
+              v-scroll-spy-link
+            >
+              <li v-for="(name, index) of menuList" :key="index">
+                <b></b><a>{{ name }}</a>
+              </li>
+            </ul>
+          </template>
+        </el-skeleton>
       </nav>
     </el-col>
     <el-col :span="1"></el-col>
     <el-col :span="20" style="height: 100%; overflow: auto" v-scroll-spy>
-      <user-info
-        :form="data.userInfo"
-        :default-state="data.userInfo.idCardNumber !== undefined"
-        @update-form="updateUserInfo"
-        :require="data.userInfo.id === undefined"
-      />
-      <!-- TODO: 叫评审会真的合适吗？ -->
-      <base-list-item title="评审会" require>
-        <template #left>
-          <el-button type="primary" :icon="Edit" circle />
+      <el-skeleton :loading="loading" animated style="height: 100%">
+        <template #template>
+          <div
+            style="
+              background: white;
+              box-sizing: border-box;
+              height: 100%;
+              padding: 20px;
+            "
+          >
+            <el-skeleton-item v-for="i in 11" :key="i" />
+          </div>
         </template>
-        <template #content>
-          <base-content :state="state" @update-state="updateState">
-            <template #content>123</template>
-            <template #form>
-              <el-form
-                label-width="100px"
-                :model="formLabelAlign"
-                style="max-width: 460px"
-              >
-                <el-form-item label="Name">
-                  <el-input v-model="formLabelAlign.name" />
-                </el-form-item>
-                <el-form-item label="Activity zone">
-                  <el-input v-model="formLabelAlign.region" />
-                </el-form-item>
-                <el-form-item label="Activity form">
-                  <el-input v-model="formLabelAlign.type" />
-                </el-form-item>
-              </el-form>
+        <template #default>
+          <user-info
+            :form="data.userInfo"
+            :default-state="data.userInfo.idCardNumber !== undefined"
+            @update-form="updateUserInfo"
+            :require="data.userInfo.id === undefined"
+          />
+          <!-- TODO: 叫评审会真的合适吗？ -->
+          <base-list-item title="评审会">
+            <template #content>
+              <el-row class="content">
+                <el-col :span="11">
+                  <div>
+                    {{ "申报年度：" + store.state.reviewFormSimple.reviewYear }}
+                  </div>
+                  <div>
+                    {{ "申报等级：" + store.state.reviewFormSimple.level }}
+                  </div>
+                </el-col>
+                <el-col :span="11">
+                  <div>
+                    {{
+                      "申报系列：" +
+                      store.state.reviewFormSimple.declarationSeries
+                    }}
+                  </div>
+                  <div>
+                    {{ "创建时间：" + store.state.reviewFormSimple.createTime }}
+                  </div>
+                </el-col>
+              </el-row>
             </template>
-          </base-content>
+          </base-list-item>
+          <education-form require />
+          <work-experience require />
+          <paper />
+          <performance-award />
+          <performance-patent />
+          <performance-result />
+          <talent-introduction-material />
+          <el-row justify="center" style="background: white; padding: 20px">
+            <el-button type="primary" @click="apply">申请</el-button>
+          </el-row>
         </template>
-      </base-list-item>
-      <education-form require />
-      <work-experience require />
-      <base-list-item title="工作总结" require>
-        <template #left>
-          <el-button type="primary" :icon="Edit" circle />
-        </template>
-        <template #content>
-          <base-content :state="state" @update-state="updateState">
-            <template #content>123</template>
-            <template #form>
-              <el-form
-                label-width="100px"
-                :model="formLabelAlign"
-                style="max-width: 460px"
-              >
-                <el-form-item label="Name">
-                  <el-input v-model="formLabelAlign.name" />
-                </el-form-item>
-                <el-form-item label="Activity zone">
-                  <el-input v-model="formLabelAlign.region" />
-                </el-form-item>
-                <el-form-item label="Activity form">
-                  <el-input v-model="formLabelAlign.type" />
-                </el-form-item>
-              </el-form>
-            </template>
-          </base-content>
-        </template>
-      </base-list-item>
-      <!-- TODO: 行政政务？ -->
-      <base-list-item title="行政政务">
-        <template #left>
-          <el-button type="primary" :icon="Edit" circle />
-        </template>
-        <template #content>
-          <base-content :state="state" @update-state="updateState">
-            <template #content>123</template>
-          </base-content>
-        </template>
-      </base-list-item>
-      <paper />
-      <performance-award />
-      <performance-patent />
-      <performance-result />
-      <talent-introduction-material />
-      <base-list-item title="承诺书">
-        <template #left>
-          <el-button type="primary" :icon="Edit" circle />
-        </template>
-        <template #content>
-          <base-content :state="state" @update-state="updateState">
-            <template #content>123</template>
-            <template #form>
-              <el-form
-                label-width="100px"
-                :model="formLabelAlign"
-                style="max-width: 460px"
-              >
-                <el-form-item label="Name">
-                  <el-input v-model="formLabelAlign.name" />
-                </el-form-item>
-                <el-form-item label="Activity zone">
-                  <el-input v-model="formLabelAlign.region" />
-                </el-form-item>
-                <el-form-item label="Activity form">
-                  <el-input v-model="formLabelAlign.type" />
-                </el-form-item>
-              </el-form>
-            </template>
-          </base-content>
-        </template>
-      </base-list-item>
+      </el-skeleton>
     </el-col>
   </el-row>
 </template>
 
 <script lang="ts" setup>
 import BaseListItem from "@/components/BaseListItem.vue";
-import { Edit } from "@element-plus/icons";
 import { reactive, ref } from "vue";
-import BaseContent from "@/components/BaseContent.vue";
-import { useRouter } from "vue-router";
 import UserInfo from "@/components/UserInfo.vue";
-import { CommonResult, Education, UserDetailInformation } from "@/@types/model";
+import { UserDetailInformation } from "@/@types/model";
 import { useInfoStore } from "@/store/info";
 import EducationForm from "@/components/person/EducationForm.vue";
-import { getEducation } from "@/api/person/education";
 import { ElMessage } from "element-plus";
-import { toArray } from "@/utils/filter";
 import WorkExperience from "@/components/person/WorkExperience.vue";
 import Paper from "@/components/person/Paper.vue";
 import PerformanceAward from "@/components/person/PerformanceAward.vue";
 import PerformancePatent from "@/components/person/PerformancePatent.vue";
 import PerformanceResult from "@/components/person/PerformanceResult.vue";
 import TalentIntroductionMaterial from "@/components/person/TalentIntroductionMaterial.vue";
+import router from "@/router";
+import { getReviewForm } from "@/api/person/reviewForm";
 
-const infoStore = useInfoStore();
+const loading = ref(true);
+const store = useInfoStore();
 const init = (async () => {
-  const { data } = await getEducation();
-  const res = data as CommonResult;
+  const { data: res } = await getReviewForm(store.state.reviewFormSimple.id);
   if (res.code !== 200) {
     ElMessage.error(res.message);
     return;
   }
-  infoStore.updateEducations(toArray(res.data) as Education[]);
+  store.updateEducations(res.data.education);
+  store.updateWorkExperience(res.data.workExperience);
+  store.updatePapers(res.data.paper);
+  store.updatePerformanceAwards(res.data.performanceAward);
+  store.updatePerformancePatents(res.data.performancePatent);
+  store.updatePerformanceResults(res.data.performanceResult);
+  store.updateTalentIntroductionMaterials(res.data.talentIntroductionMaterial);
+  loading.value = false;
 })();
 const menuList = reactive([
   "个人信息",
   "评审会",
   "学历情况",
   "工作经历",
-  "工作总结",
-  "行政政务",
   "论文",
   "业绩奖励",
   "业绩专利",
   "业绩成果",
   "人才引进材料",
-  "承诺书",
 ]);
 const data = reactive({
-  userInfo: infoStore.state.userDetail,
-  educations: infoStore.state.educations,
+  userInfo: store.state.userDetail,
+  educations: store.state.educations,
 });
 const state = ref(false);
-const formLabelAlign = reactive({
-  name: "",
-  region: "",
-  type: "",
-});
-const router = useRouter();
-const updateState = (value: boolean) => {
-  state.value = value;
-};
 const updateUserInfo = (form: UserDetailInformation) => {
   data.userInfo = form;
-  infoStore.updateUserDetail(form);
+  store.updateUserDetail(form);
+};
+
+const apply = () => {
+  if (!store.state.userDetail.name || store.state.userDetail.name === "") {
+    ElMessage.error("个人信息未填写完全");
+    router.push("#个人信息");
+  } else if (store.state.educations.length === 0) {
+    ElMessage.error("未填写学历情况");
+    router.push("#学历情况");
+  } else if (store.state.educations.length === 0) {
+    ElMessage.error("未填写工作经历");
+    router.push("#工作经历");
+  } else {
+  }
 };
 </script>
 

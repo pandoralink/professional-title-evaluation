@@ -103,8 +103,7 @@
             </el-col>
           </el-row>
           <el-row justify="center">
-            <el-button
-              @click="cancel(item, index, state, store.updateWorkExperience)"
+            <el-button @click="cancel(item, index, state, store.updatePapers)"
               >取消
             </el-button>
             <el-button type="primary" @click="save(item)">保存</el-button>
@@ -185,31 +184,36 @@ const rules = reactive({
 const save = async (value: ReviewFormData<Paper>) => {
   if (!value.formRef) return;
   await value.formRef.validate(async (valid: any, fields: any) => {
+    value.value.reviewFormId = store.state.reviewFormSimple.id;
     value.value.publishTime = dayjs(value.value.publishTime).format(
       "YYYY-MM-DD"
     );
     if (valid) {
-      if (Object.keys(value.originalValue).length === 0) {
-        // insert
-        const { data } = await insertPaper(value.value);
-        const res = data as CommonResult;
-        if (res.code !== 200) {
-          ElMessage.error(res.message);
-          return;
+      try {
+        if (Object.keys(value.originalValue).length === 0) {
+          // insert
+          const { data } = await insertPaper(value.value);
+          const res = data as CommonResult;
+          if (res.code !== 200) {
+            ElMessage.error(res.message);
+            return;
+          }
+          value.value.id = res.data as number;
+        } else {
+          // update
+          value.value.reviewFormId = null;
+          const { data } = await updatePaper(value.value);
+          const res = data as CommonResult;
+          if (res.code !== 200) {
+            ElMessage.error(res.message);
+            return;
+          }
         }
-        value.value.id = res.data as number;
-      } else {
-        // update
-        const { data } = await updatePaper(value.value);
-        const res = data as CommonResult;
-        if (res.code !== 200) {
-          ElMessage.error(res.message);
-          return;
-        }
+      } finally {
+        value.originalValue = value.value;
+        value.edit = false;
+        store.updatePapers(getArray(state));
       }
-      value.originalValue = value.value;
-      value.edit = false;
-      store.updatePapers(getArray(state));
     } else {
       ElMessage.error(`填写错误`);
     }

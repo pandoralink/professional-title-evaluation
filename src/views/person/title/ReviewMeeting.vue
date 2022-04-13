@@ -57,11 +57,11 @@ import { dayjs } from "element-plus/es";
 import { reactive, ref, watch } from "vue";
 import { CommonResult, ReviewMeeting } from "@/@types/model";
 import {
-  createReviewForm,
   getDeclarationSeries,
   getReviewMeetingName,
 } from "@/api/person/reviewMeeting";
 import { ElMessage, FormInstance } from "element-plus";
+import { createReviewForm } from "@/api/person/reviewForm";
 
 const router = useRouter();
 

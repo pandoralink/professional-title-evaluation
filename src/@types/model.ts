@@ -32,7 +32,7 @@ export interface Education {
 
 export interface Paper {
   id: number;
-  reviewFormId: number;
+  reviewFormId: number | null;
   publishTime: string;
   category: string;
   role: string;
@@ -43,7 +43,7 @@ export interface Paper {
 
 export interface PerformanceAward {
   id: number;
-  reviewFormId: number;
+  reviewFormId: number | null;
   name: string;
   level: string;
   grantTime: string;
@@ -54,7 +54,7 @@ export interface PerformanceAward {
 
 export interface PerformancePatent {
   id: number;
-  reviewFormId: number;
+  reviewFormId: number | null;
   name: string;
   type: string;
   acquireTime: string;
@@ -64,7 +64,7 @@ export interface PerformancePatent {
 
 export interface PerformanceResult {
   id: number;
-  reviewFormId: number;
+  reviewFormId: number | null;
   name: string;
   size: string;
   role: string;
@@ -109,7 +109,7 @@ export interface ReviewFormSimple {
 
 export interface TalentIntroductionMaterial {
   id: number;
-  reviewFormId: number;
+  reviewFormId: number | null;
   name: string;
   materials: string[];
 }

@@ -1,5 +1,5 @@
 <template>
-  <base-list-item title="工作经历" :require="require">
+  <base-list-item title="业绩成果" :require="require">
     <template #left>
       <el-button
         type="primary"
@@ -14,13 +14,14 @@
       <el-row v-for="(item, index) of state" :key="index" class="content">
         <template v-if="!item.edit">
           <el-col :span="12">
-            <div>{{ "离职时间：" + item.value.separationTime }}</div>
-            <div>{{ "工作地点：" + item.value.workAddress }}</div>
-            <div>{{ "职业：" + item.value.career }}</div>
+            <div>{{ "业绩成果名称：" + item.value.name }}</div>
+            <div>{{ "项目规模：" + item.value.size }}</div>
+            <div>{{ "本人在项目中的作用：" + item.value.role }}</div>
           </el-col>
           <el-col :span="12">
-            <div>{{ "参加工作时间：" + item.value.participationTime }}</div>
-            <div>{{ "证明人：" + item.value.attestor }}</div>
+            <div>{{ "完成情况：" + item.value.completion }}</div>
+            <div>{{ "项目的效益：" + item.value.benefit }}</div>
+            <div>{{ "项目专利：" + item.value.patent }}</div>
           </el-col>
           <el-col
             :span="12"
@@ -44,55 +45,99 @@
         >
           <el-row>
             <el-col :span="8">
-              <el-form-item prop="attestor" label="证明人">
-                <el-input v-model="item.value.attestor" />
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item prop="career" label="职业">
-                <el-input v-model="item.value.career" placeholder="职业" />
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item prop="workAddress" label="工作地点">
+              <el-form-item prop="name" label="业绩成果名称">
                 <el-input
-                  v-model="item.value.workAddress"
-                  placeholder="工作地点"
-                />
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="8">
-              <el-form-item prop="participationTime" label="参加工作时间">
-                <el-date-picker
-                  v-model="item.value.participationTime"
-                  type="date"
-                  placeholder="参加工作时间"
+                  v-model="item.value.name"
+                  placeholder="业绩成果名称"
                 />
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item prop="separationTime" label="离职时间">
-                <el-date-picker
-                  v-model="item.value.separationTime"
-                  type="date"
-                  placeholder="离职时间"
+              <el-form-item prop="size" label="项目规模">
+                <el-select v-model="item.value.size" placeholder="项目规模">
+                  <el-option label="小型" value="小型" />
+                  <el-option label="中型" value="中型" />
+                  <el-option label="大型" value="大型" />
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item prop="role" label="本人在项目中的作用">
+                <el-input
+                  v-model="item.value.role"
+                  placeholder="本人在项目中的作用"
                 />
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item prop="completion" label="完成情况">
+                <el-input
+                  v-model="item.value.completion"
+                  placeholder="本人在项目中的作用"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item prop="benefit" label="项目的效益">
+                <el-input
+                  v-model="item.value.benefit"
+                  placeholder="项目的效益"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item prop="patent" label="项目专利">
+                <el-input v-model="item.value.patent" placeholder="项目专利" />
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
-            <el-form-item prop="materials" label="证件材料">
-              <!-- TODO: materials 为链接字符串，没有相应的中文名，无法展示已经上传的文件名 -->
+            <el-form-item prop="projectMaterials" label="证件材料">
+              <!-- 二次封装 upload 组件 -->
               <el-upload
-                @click="modifyActiveIndex(index)"
+                @click="modifyProjectMaterialsActiveIndex(index)"
                 drag
                 action="/prefix/upload"
                 multiple
                 name="files"
                 with-credentials
-                :on-success="handleSuccess"
+                :on-success="handleProjectMaterialsSuccess"
+              >
+                <el-icon class="el-icon--upload">
+                  <upload-filled />
+                </el-icon>
+                <div class="el-upload__text">
+                  将您的证书材料拖到这里上传或者 <em>点击选择您的材料</em>
+                </div>
+              </el-upload>
+            </el-form-item>
+            <el-form-item prop="tenureMaterials" label="证件材料">
+              <el-upload
+                @click="modifyTenureMaterialsActiveIndex(index)"
+                drag
+                action="/prefix/upload"
+                multiple
+                name="files"
+                with-credentials
+                :on-success="handleTenureMaterialsSuccess"
+              >
+                <el-icon class="el-icon--upload">
+                  <upload-filled />
+                </el-icon>
+                <div class="el-upload__text">
+                  将您的证书材料拖到这里上传或者 <em>点击选择您的材料</em>
+                </div>
+              </el-upload>
+            </el-form-item>
+            <el-form-item prop="resultMaterials" label="证件材料">
+              <el-upload
+                @click="modifyResultMaterialsActiveIndex(index)"
+                drag
+                action="/prefix/upload"
+                multiple
+                name="files"
+                with-credentials
+                :on-success="handleResultMaterialsSuccess"
               >
                 <el-icon class="el-icon--upload">
                   <upload-filled />
@@ -105,7 +150,9 @@
           </el-row>
           <el-row justify="center">
             <el-button
-              @click="cancel(item, index, state, store.updateWorkExperience)"
+              @click="
+                cancel(item, index, state, store.updatePerformanceResults)
+              "
               >取消
             </el-button>
             <el-button type="primary" @click="save(item)">保存</el-button>
@@ -117,20 +164,23 @@
 </template>
 
 <script lang="ts" setup>
-import { CommonResult, ReviewFormData, WorkExperience } from "@/@types/model";
+import {
+  CommonResult,
+  ReviewFormData,
+  PerformanceResult,
+} from "@/@types/model";
 import { reactive, ref } from "vue";
 import BaseListItem from "@/components/BaseListItem.vue";
 import { Edit, UploadFilled } from "@element-plus/icons";
 import type { UploadProps } from "element-plus";
 import { ElMessage } from "element-plus";
-import { dayjs } from "element-plus/es";
 import { useInfoStore } from "@/store/info";
 import { addEmptyFormItem, addFormItem, cancel, getArray } from "@/mixins";
 import {
-  deleteWorkExperience,
-  insertWorkExperience,
-  updateWorkExperience,
-} from "@/api/person/workExperience";
+  deletePerformanceResult,
+  insertPerformanceResult,
+  updatePerformanceResult,
+} from "@/api/person/performanceResult";
 
 interface Props {
   require?: boolean;
@@ -142,50 +192,61 @@ const props = withDefaults(defineProps<Props>(), {
 
 const store = useInfoStore();
 // 数据
-const state = reactive<ReviewFormData<WorkExperience>[]>([]);
-if (Array.isArray(store.state.workExperiences)) {
-  for (const workExperience of store.state.workExperiences) {
-    addFormItem(state, workExperience);
+const state = reactive<ReviewFormData<PerformanceResult>[]>([]);
+if (Array.isArray(store.state.performanceResults)) {
+  for (const performanceResult of store.state.performanceResults) {
+    addFormItem(state, performanceResult);
   }
 } else {
   throw Error("value 不是数组");
 }
 
 const rules = reactive({
-  attestor: [
-    {
-      required: true,
-      message: "未填写证明人",
-      trigger: "blur",
-    },
-  ],
-  graduationTime: [
-    {
-      type: "date",
-      required: true,
-      message: "请选择参加工作时间",
-      trigger: "blur",
-    },
-  ],
-  separationTime: {
-    type: "date",
+  name: {
     required: true,
-    message: "请选择离职时间",
+    message: "未填写业绩成果名称",
     trigger: "blur",
   },
-  workAddress: {
+  size: {
     required: true,
-    message: "未填写工作地点",
+    message: "未填写项目规模",
     trigger: "blur",
   },
-  career: [
+  role: {
+    required: true,
+    message: "未填写本人在项目中的作用",
+    trigger: "blur",
+  },
+  completion: {
+    required: true,
+    message: "未填写完成情况",
+    trigger: "blur",
+  },
+  benefit: [
     {
       required: true,
-      message: "未填写职业",
+      message: "未填写项目的效益",
       trigger: "blur",
     },
   ],
-  materials: {
+  patent: {
+    required: true,
+    message: "未填写项目专利",
+    trigger: "blur",
+  },
+  projectMaterials: {
+    type: "array",
+    required: true,
+    message: "至少上传一个附件",
+    trigger: "change",
+  },
+  tenureMaterials: {
+    type: "array",
+    required: true,
+    message: "至少上传一个附件",
+    trigger: "change",
+  },
+  resultMaterials: {
     type: "array",
     required: true,
     message: "至少上传一个附件",
@@ -193,37 +254,36 @@ const rules = reactive({
   },
 });
 
-const save = async (value: ReviewFormData<WorkExperience>) => {
+const save = async (value: ReviewFormData<PerformanceResult>) => {
   if (!value.formRef) return;
   await value.formRef.validate(async (valid: any, fields: any) => {
-    value.value.separationTime = dayjs(value.value.separationTime).format(
-      "YYYY-MM-DD"
-    );
-    value.value.participationTime = dayjs(value.value.separationTime).format(
-      "YYYY-MM-DD"
-    );
     if (valid) {
-      if (Object.keys(value.originalValue).length === 0) {
-        // insert
-        const { data } = await insertWorkExperience(value.value);
-        const res = data as CommonResult;
-        if (res.code !== 200) {
-          ElMessage.error(res.message);
-          return;
+      value.value.reviewFormId = store.state.reviewFormSimple.id;
+      try {
+        if (Object.keys(value.originalValue).length === 0) {
+          // insert
+          const { data } = await insertPerformanceResult(value.value);
+          const res = data as CommonResult;
+          if (res.code !== 200) {
+            ElMessage.error(res.message);
+            return;
+          }
+          value.value.id = res.data as number;
+        } else {
+          // update
+          value.value.reviewFormId = null;
+          const { data } = await updatePerformanceResult(value.value);
+          const res = data as CommonResult;
+          if (res.code !== 200) {
+            ElMessage.error(res.message);
+            return;
+          }
         }
-        value.value.id = res.data as number;
-      } else {
-        // update
-        const { data } = await updateWorkExperience(value.value);
-        const res = data as CommonResult;
-        if (res.code !== 200) {
-          ElMessage.error(res.message);
-          return;
-        }
+      } finally {
+        value.originalValue = value.value;
+        value.edit = false;
+        store.updatePerformanceResults(getArray(state));
       }
-      value.originalValue = value.value;
-      value.edit = false;
-      store.updateWorkExperience(getArray(state));
     } else {
       ElMessage.error(`填写错误`);
     }
@@ -231,7 +291,7 @@ const save = async (value: ReviewFormData<WorkExperience>) => {
 };
 
 const deleteItem = async (index: number) => {
-  const { data } = await deleteWorkExperience(state[index].value.id);
+  const { data } = await deletePerformanceResult(state[index].value.id);
   const res = data as CommonResult;
   if (res.code !== 200) {
     ElMessage.error(res.message);
@@ -241,18 +301,49 @@ const deleteItem = async (index: number) => {
   store.updateEducations(getArray(data));
 };
 
-const handleSuccess: UploadProps["onSuccess"] = (response, uploadFile) => {
-  const value = state[activeIndex.value].value;
-  if (!value?.materials) {
-    value.materials = [];
+const handleProjectMaterialsSuccess: UploadProps["onSuccess"] = (
+  response,
+  uploadFile
+) => {
+  const value = state[activeProjectMaterialsIndex.value].value;
+  if (!value?.projectMaterials) {
+    value.projectMaterials = [];
   }
-  value.materials = response.data;
+  value.projectMaterials = response.data;
+};
+const handleTenureMaterialsSuccess: UploadProps["onSuccess"] = (
+  response,
+  uploadFile
+) => {
+  const value = state[activeTenureMaterialsIndex.value].value;
+  if (!value?.tenureMaterials) {
+    value.tenureMaterials = [];
+  }
+  value.tenureMaterials = response.data;
+};
+const handleResultMaterialsSuccess: UploadProps["onSuccess"] = (
+  response,
+  uploadFile
+) => {
+  const value = state[activeResultMaterialsIndex.value].value;
+  if (!value?.resultMaterials) {
+    value.resultMaterials = [];
+  }
+  value.resultMaterials = response.data;
 };
 
 // 当前点击的上传组件位于表单数组的索引
-const activeIndex = ref(0);
-const modifyActiveIndex = (index: number) => {
-  activeIndex.value = index;
+const activeProjectMaterialsIndex = ref(0);
+const modifyProjectMaterialsActiveIndex = (index: number) => {
+  activeProjectMaterialsIndex.value = index;
+};
+const activeTenureMaterialsIndex = ref(0);
+const modifyTenureMaterialsActiveIndex = (index: number) => {
+  activeTenureMaterialsIndex.value = index;
+};
+const activeResultMaterialsIndex = ref(0);
+const modifyResultMaterialsActiveIndex = (index: number) => {
+  activeResultMaterialsIndex.value = index;
 };
 
 const toEdit = (index: number) => {

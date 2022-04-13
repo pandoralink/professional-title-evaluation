@@ -1,5 +1,5 @@
 <template>
-  <base-list-item title="工作经历" :require="require">
+  <base-list-item title="业绩专利" :require="require">
     <template #left>
       <el-button
         type="primary"
@@ -14,13 +14,12 @@
       <el-row v-for="(item, index) of state" :key="index" class="content">
         <template v-if="!item.edit">
           <el-col :span="12">
-            <div>{{ "离职时间：" + item.value.separationTime }}</div>
-            <div>{{ "工作地点：" + item.value.workAddress }}</div>
-            <div>{{ "职业：" + item.value.career }}</div>
+            <div>{{ "专利名称：" + item.value.name }}</div>
+            <div>{{ "专利类型：" + item.value.type }}</div>
           </el-col>
           <el-col :span="12">
-            <div>{{ "参加工作时间：" + item.value.participationTime }}</div>
-            <div>{{ "证明人：" + item.value.attestor }}</div>
+            <div>{{ "获取时间：" + item.value.acquireTime }}</div>
+            <div>{{ "专利介绍：" + item.value.introduction }}</div>
           </el-col>
           <el-col
             :span="12"
@@ -44,47 +43,35 @@
         >
           <el-row>
             <el-col :span="8">
-              <el-form-item prop="attestor" label="证明人">
-                <el-input v-model="item.value.attestor" />
+              <el-form-item prop="name" label="专利名称">
+                <el-input v-model="item.value.name" placeholder="专利名称" />
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item prop="career" label="职业">
-                <el-input v-model="item.value.career" placeholder="职业" />
+              <el-form-item prop="type" label="专利类型">
+                <el-input v-model="item.value.type" placeholder="专利类型" />
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item prop="workAddress" label="工作地点">
+              <el-form-item prop="introduction" label="专利介绍">
                 <el-input
-                  v-model="item.value.workAddress"
-                  placeholder="工作地点"
-                />
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="8">
-              <el-form-item prop="participationTime" label="参加工作时间">
-                <el-date-picker
-                  v-model="item.value.participationTime"
-                  type="date"
-                  placeholder="参加工作时间"
+                  v-model="item.value.introduction"
+                  placeholder="专利介绍"
                 />
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item prop="separationTime" label="离职时间">
+              <el-form-item prop="acquireTime" label="获取时间">
                 <el-date-picker
-                  v-model="item.value.separationTime"
+                  v-model="item.value.acquireTime"
                   type="date"
-                  placeholder="离职时间"
+                  placeholder="获取时间"
                 />
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-form-item prop="materials" label="证件材料">
-              <!-- TODO: materials 为链接字符串，没有相应的中文名，无法展示已经上传的文件名 -->
               <el-upload
                 @click="modifyActiveIndex(index)"
                 drag
@@ -105,7 +92,9 @@
           </el-row>
           <el-row justify="center">
             <el-button
-              @click="cancel(item, index, state, store.updateWorkExperience)"
+              @click="
+                cancel(item, index, state, store.updatePerformancePatents)
+              "
               >取消
             </el-button>
             <el-button type="primary" @click="save(item)">保存</el-button>
@@ -117,7 +106,11 @@
 </template>
 
 <script lang="ts" setup>
-import { CommonResult, ReviewFormData, WorkExperience } from "@/@types/model";
+import {
+  CommonResult,
+  ReviewFormData,
+  PerformancePatent,
+} from "@/@types/model";
 import { reactive, ref } from "vue";
 import BaseListItem from "@/components/BaseListItem.vue";
 import { Edit, UploadFilled } from "@element-plus/icons";
@@ -127,10 +120,10 @@ import { dayjs } from "element-plus/es";
 import { useInfoStore } from "@/store/info";
 import { addEmptyFormItem, addFormItem, cancel, getArray } from "@/mixins";
 import {
-  deleteWorkExperience,
-  insertWorkExperience,
-  updateWorkExperience,
-} from "@/api/person/workExperience";
+  deletePerformancePatent,
+  insertPerformancePatent,
+  updatePerformancePatent,
+} from "@/api/person/performancePatent";
 
 interface Props {
   require?: boolean;
@@ -142,49 +135,37 @@ const props = withDefaults(defineProps<Props>(), {
 
 const store = useInfoStore();
 // 数据
-const state = reactive<ReviewFormData<WorkExperience>[]>([]);
-if (Array.isArray(store.state.workExperiences)) {
-  for (const workExperience of store.state.workExperiences) {
-    addFormItem(state, workExperience);
+const state = reactive<ReviewFormData<PerformancePatent>[]>([]);
+if (Array.isArray(store.state.performancePatents)) {
+  for (const performancePatent of store.state.performancePatents) {
+    addFormItem(state, performancePatent);
   }
 } else {
   throw Error("value 不是数组");
 }
 
 const rules = reactive({
-  attestor: [
-    {
-      required: true,
-      message: "未填写证明人",
-      trigger: "blur",
-    },
-  ],
-  graduationTime: [
-    {
-      type: "date",
-      required: true,
-      message: "请选择参加工作时间",
-      trigger: "blur",
-    },
-  ],
-  separationTime: {
+  name: {
+    required: true,
+    message: "未填写专利名称",
+    trigger: "blur",
+  },
+  type: {
+    required: true,
+    message: "未填写专利类型",
+    trigger: "blur",
+  },
+  acquireTime: {
     type: "date",
     required: true,
-    message: "请选择离职时间",
+    message: "请选择获取时间",
     trigger: "blur",
   },
-  workAddress: {
+  introduction: {
     required: true,
-    message: "未填写工作地点",
+    message: "未填写专利介绍",
     trigger: "blur",
   },
-  career: [
-    {
-      required: true,
-      message: "未填写职业",
-      trigger: "blur",
-    },
-  ],
   materials: {
     type: "array",
     required: true,
@@ -193,37 +174,39 @@ const rules = reactive({
   },
 });
 
-const save = async (value: ReviewFormData<WorkExperience>) => {
+const save = async (value: ReviewFormData<PerformancePatent>) => {
   if (!value.formRef) return;
   await value.formRef.validate(async (valid: any, fields: any) => {
-    value.value.separationTime = dayjs(value.value.separationTime).format(
-      "YYYY-MM-DD"
-    );
-    value.value.participationTime = dayjs(value.value.separationTime).format(
+    value.value.reviewFormId = store.state.reviewFormSimple.id;
+    value.value.acquireTime = dayjs(value.value.acquireTime).format(
       "YYYY-MM-DD"
     );
     if (valid) {
-      if (Object.keys(value.originalValue).length === 0) {
-        // insert
-        const { data } = await insertWorkExperience(value.value);
-        const res = data as CommonResult;
-        if (res.code !== 200) {
-          ElMessage.error(res.message);
-          return;
+      try {
+        if (Object.keys(value.originalValue).length === 0) {
+          // insert
+          const { data } = await insertPerformancePatent(value.value);
+          const res = data as CommonResult;
+          if (res.code !== 200) {
+            ElMessage.error(res.message);
+            return;
+          }
+          value.value.id = res.data as number;
+        } else {
+          // update
+          value.value.reviewFormId = null;
+          const { data } = await updatePerformancePatent(value.value);
+          const res = data as CommonResult;
+          if (res.code !== 200) {
+            ElMessage.error(res.message);
+            return;
+          }
         }
-        value.value.id = res.data as number;
-      } else {
-        // update
-        const { data } = await updateWorkExperience(value.value);
-        const res = data as CommonResult;
-        if (res.code !== 200) {
-          ElMessage.error(res.message);
-          return;
-        }
+      } finally {
+        value.originalValue = value.value;
+        value.edit = false;
+        store.updatePerformancePatents(getArray(state));
       }
-      value.originalValue = value.value;
-      value.edit = false;
-      store.updateWorkExperience(getArray(state));
     } else {
       ElMessage.error(`填写错误`);
     }
@@ -231,7 +214,7 @@ const save = async (value: ReviewFormData<WorkExperience>) => {
 };
 
 const deleteItem = async (index: number) => {
-  const { data } = await deleteWorkExperience(state[index].value.id);
+  const { data } = await deletePerformancePatent(state[index].value.id);
   const res = data as CommonResult;
   if (res.code !== 200) {
     ElMessage.error(res.message);

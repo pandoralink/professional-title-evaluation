@@ -6,6 +6,7 @@ import {
   PerformanceAward,
   PerformancePatent,
   PerformanceResult,
+  ReviewFormSimple,
   TalentIntroductionMaterial,
   UserDetailInformation,
   WorkExperience,
@@ -24,6 +25,7 @@ export const useInfoStore = defineStore("info", () => {
     performancePatents: [] as PerformancePatent[],
     performanceResults: [] as PerformanceResult[],
     talentIntroductionMaterials: [] as TalentIntroductionMaterial[],
+    reviewFormSimple: {} as ReviewFormSimple,
   });
   const updateUserDetail = (data: UserDetailInformation) => {
     state.userDetail = data;
@@ -51,11 +53,13 @@ export const useInfoStore = defineStore("info", () => {
   ) => {
     state.talentIntroductionMaterials = data;
   };
+  const updateReviewFormSimple = (data: ReviewFormSimple) => {
+    state.reviewFormSimple = data;
+  };
 
   return {
     state,
     updateUserDetail,
-    educations: state.educations,
     updateEducations,
     updateWorkExperience,
     updatePapers,
@@ -63,5 +67,6 @@ export const useInfoStore = defineStore("info", () => {
     updatePerformancePatents,
     updatePerformanceResults,
     updateTalentIntroductionMaterials,
+    updateReviewFormSimple,
   };
 });
