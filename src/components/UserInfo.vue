@@ -7,26 +7,26 @@
     </template>
     <template #content>
       <el-row
-        v-if="state && formCopy.name"
+        v-if="!formCopy.edit"
         class="content-text"
         style="min-width: 1000px"
       >
         <el-col :span="7">
-          <div>{{ "姓名：" + form.name }}</div>
-          <div>{{ "性别：" + form.sex }}</div>
-          <div>{{ "生日：" + birthday }}</div>
-          <div>{{ "联系电话：" + form.phoneNumber }}</div>
-          <div>{{ "邮箱：" + form.email }}</div>
-          <div>{{ "国家：" + form.nation }}</div>
-          <div>{{ "证件号码：" + form.idCardNumber }}</div>
+          <div>{{ "姓名：" + formCopy.value.name }}</div>
+          <div>{{ "性别：" + formCopy.value.sex }}</div>
+          <div>{{ "生日：" + formCopy.value.birthday }}</div>
+          <div>{{ "联系电话：" + formCopy.value.phoneNumber }}</div>
+          <div>{{ "邮箱：" + formCopy.value.email }}</div>
+          <div>{{ "国家：" + formCopy.value.nation }}</div>
+          <div>{{ "证件号码：" + formCopy.value.idCardNumber }}</div>
         </el-col>
         <el-col :span="7">
-          <div>{{ "所属单位：" + form.department }}</div>
-          <div>{{ "政治面貌：" + form.politicalAppearance }}</div>
-          <div>{{ "个人身份性质：" + form.personalStatus }}</div>
-          <div>{{ "籍贯：" + form.origin }}</div>
-          <div>{{ "联系地址：" + form.address }}</div>
-          <div>{{ "行政职务：" + form.executive }}</div>
+          <div>{{ "所属单位：" + formCopy.value.department }}</div>
+          <div>{{ "政治面貌：" + formCopy.value.politicalAppearance }}</div>
+          <div>{{ "个人身份性质：" + formCopy.value.personalStatus }}</div>
+          <div>{{ "籍贯：" + formCopy.value.origin }}</div>
+          <div>{{ "联系地址：" + formCopy.value.address }}</div>
+          <div>{{ "行政职务：" + formCopy.value.executive }}</div>
         </el-col>
         <el-col :span="10">
           <el-row align="middle">
@@ -40,8 +40,8 @@
                 "
               >
                 <img
-                  v-if="formCopy.idCardFrontPhoto"
-                  :src="formCopy.idCardFrontPhoto"
+                  v-if="formCopy.value.idCardFrontPhoto"
+                  :src="formCopy.value.idCardFrontPhoto"
                   class="avatar"
                 />
                 <el-icon v-else class="avatar-uploader-icon">
@@ -56,8 +56,8 @@
                 "
               >
                 <img
-                  v-if="formCopy.idCardReversePhoto"
-                  :src="formCopy.idCardReversePhoto"
+                  v-if="formCopy.value.idCardReversePhoto"
+                  :src="formCopy.value.idCardReversePhoto"
                   class="avatar"
                 />
                 <el-icon v-else class="avatar-uploader-icon">
@@ -75,8 +75,8 @@
                 "
               >
                 <img
-                  v-if="formCopy.twoInchPhoto"
-                  :src="formCopy.twoInchPhoto"
+                  v-if="formCopy.value.twoInchPhoto"
+                  :src="formCopy.value.twoInchPhoto"
                   class="avatar"
                 />
                 <el-icon v-else class="avatar-uploader-icon">
@@ -88,19 +88,19 @@
         </el-col>
       </el-row>
       <div>
-        <div v-if="!state">
+        <div v-if="formCopy.edit">
           <!-- TODO: 数据库中一些中文字段比如性别、国家和籍贯的值是什么？ -->
           <el-form
-            ref="ruleFormRef"
+            :ref="(el) => (formCopy.formRef = el)"
             :rules="rules"
-            :model="formCopy"
+            :model="formCopy.value"
             style="max-width: 1100px"
             label-width="100px"
           >
             <el-row>
               <el-col :span="8">
                 <!-- XXX: upload 疑似不能查看是否已填 -->
-                <el-form-item prop="twoInchPhoto" label="免冠2寸照片" required>
+                <el-form-item prop="twoInchPhoto" label="免冠2寸照片">
                   <el-upload
                     class="avatar-uploader header"
                     action="/prefix/upload"
@@ -111,8 +111,8 @@
                     :before-upload="beforeAvatarUpload"
                   >
                     <img
-                      v-if="formCopy.twoInchPhoto"
-                      :src="formCopy.twoInchPhoto"
+                      v-if="formCopy.value.twoInchPhoto"
+                      :src="formCopy.value.twoInchPhoto"
                       class="avatar"
                     />
                     <el-icon v-else class="avatar-uploader-icon">
@@ -123,13 +123,17 @@
               </el-col>
               <el-col :span="8">
                 <el-form-item prop="name" label="姓名" required>
-                  <el-input v-model="formCopy.name" />
+                  <el-input v-model="formCopy.value.name" />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
                 <el-form-item prop="sex" label="性别" required>
-                  <el-radio v-model="formCopy.sex" label="男">男</el-radio>
-                  <el-radio v-model="formCopy.sex" label="女">女</el-radio>
+                  <el-radio v-model="formCopy.value.sex" label="男"
+                    >男
+                  </el-radio>
+                  <el-radio v-model="formCopy.value.sex" label="女"
+                    >女
+                  </el-radio>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -137,7 +141,7 @@
               <el-col :span="8">
                 <el-form-item prop="birthday" label="生日">
                   <el-date-picker
-                    v-model="formCopy.birthday"
+                    v-model="formCopy.value.birthday"
                     type="date"
                     placeholder="生日"
                   />
@@ -145,24 +149,24 @@
               </el-col>
               <el-col :span="8">
                 <el-form-item prop="phoneNumber" label="联系电话" required>
-                  <el-input v-model="formCopy.phoneNumber" />
+                  <el-input v-model="formCopy.value.phoneNumber" />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
                 <el-form-item prop="email" label="邮箱" required>
-                  <el-input v-model="formCopy.email" />
+                  <el-input v-model="formCopy.value.email" />
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row>
               <el-col :span="8">
                 <el-form-item prop="nation" label="国家" required>
-                  <el-input v-model="formCopy.nation" />
+                  <el-input v-model="formCopy.value.nation" />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
                 <el-form-item prop="idCardNumber" label="证件号码" required>
-                  <el-input v-model="formCopy.idCardNumber" />
+                  <el-input v-model="formCopy.value.idCardNumber" />
                 </el-form-item>
               </el-col>
               <el-col :span="8"></el-col>
@@ -170,7 +174,7 @@
             <el-row>
               <el-col :span="8">
                 <el-form-item prop="department" label="所属单位" required>
-                  <el-input v-model="formCopy.department" />
+                  <el-input v-model="formCopy.value.department" />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
@@ -179,7 +183,7 @@
                   label="政治面貌"
                   required
                 >
-                  <el-select v-model="formCopy.politicalAppearance">
+                  <el-select v-model="formCopy.value.politicalAppearance">
                     <el-option label="群众" value="群众" />
                     <el-option label="共青团员" value="共青团员" />
                     <el-option label="共产党员" value="共产党员" />
@@ -192,7 +196,7 @@
                   label="个人身份性质"
                   required
                 >
-                  <el-select v-model="formCopy.personalStatus">
+                  <el-select v-model="formCopy.value.personalStatus">
                     <el-option label="学生" value="学生" />
                     <el-option label="工人" value="工人" />
                     <el-option label="农民" value="农民" />
@@ -219,8 +223,8 @@
                     :before-upload="beforeAvatarUpload"
                   >
                     <img
-                      v-if="formCopy.idCardFrontPhoto"
-                      :src="formCopy.idCardFrontPhoto"
+                      v-if="formCopy.value.idCardFrontPhoto"
+                      :src="formCopy.value.idCardFrontPhoto"
                       class="avatar"
                     />
                     <el-icon v-else class="avatar-uploader-icon">
@@ -245,8 +249,8 @@
                     :before-upload="beforeAvatarUpload"
                   >
                     <img
-                      v-if="formCopy.idCardReversePhoto"
-                      :src="formCopy.idCardReversePhoto"
+                      v-if="formCopy.value.idCardReversePhoto"
+                      :src="formCopy.value.idCardReversePhoto"
                       class="avatar"
                     />
                     <el-icon v-else class="avatar-uploader-icon">
@@ -260,25 +264,23 @@
             <el-row>
               <el-col :span="8">
                 <el-form-item prop="origin" label="籍贯" required>
-                  <el-input v-model="formCopy.origin" />
+                  <el-input v-model="formCopy.value.origin" />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
                 <el-form-item prop="address" label="联系地址" required>
-                  <el-input v-model="formCopy.address" />
+                  <el-input v-model="formCopy.value.address" />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
                 <el-form-item prop="executive" label="行政职务" required>
-                  <el-input v-model="formCopy.executive" />
+                  <el-input v-model="formCopy.value.executive" />
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row justify="center">
-              <el-button @click="toShow">取消</el-button>
-              <el-button type="primary" @click="save(ruleFormRef)"
-                >保存
-              </el-button>
+              <el-button @click="cancel">取消</el-button>
+              <el-button type="primary" @click="save">保存</el-button>
             </el-row>
           </el-form>
         </div>
@@ -288,14 +290,21 @@
 </template>
 
 <script lang="ts" setup>
-import { UserDetailInformation } from "@/@types/model";
-import { computed, reactive, ref, toRaw, watch } from "vue";
+import {
+  CommonResult,
+  ReviewFormData,
+  UserDetailInformation,
+} from "@/@types/model";
+import { reactive, ref, watch } from "vue";
 import BaseListItem from "@/components/BaseListItem.vue";
 import { Edit, Plus } from "@element-plus/icons";
+import type { FormInstance, UploadProps } from "element-plus";
 import { ElMessage } from "element-plus";
-import type { UploadProps } from "element-plus";
 import { dayjs } from "element-plus/es";
-import type { FormInstance } from "element-plus";
+import { useInfoStore } from "@/store/info";
+import { insertUserInfo, updateUserInfo } from "@/api/person/userInfo";
+import { getUploadFileUrl } from "@/utils/util";
+import { getArray } from "@/mixins";
 
 interface Props {
   /**
@@ -312,10 +321,6 @@ const props = withDefaults(defineProps<Props>(), {
   require: false,
 });
 
-const emits = defineEmits<{
-  (e: "updateForm", form: UserDetailInformation): void;
-}>();
-
 const state = ref(props.defaultState);
 
 watch(
@@ -323,13 +328,13 @@ watch(
   (value, oldValue) => (state.value = value)
 );
 
-const formCopy = reactive(
-  Object.assign({}, toRaw(props.form)) as UserDetailInformation
-);
-
-const birthday = computed(() => dayjs(formCopy.birthday).format("YYYY-MM-DD"));
-
-const ruleFormRef = ref<FormInstance>();
+const store = useInfoStore();
+const formCopy = reactive<ReviewFormData<UserDetailInformation>>({
+  formRef: ref<FormInstance>(),
+  value: store.state.userDetail,
+  originalValue: store.state.userDetail,
+  edit: store.state.userDetail.name === "",
+});
 
 const rules = reactive({
   name: [
@@ -435,43 +440,66 @@ const rules = reactive({
   },
 });
 
-// TODO: 可能需要加一个状态位来确保是否已经完成校验，并借此判断是否需要展示 content
-const save = async (formEl: FormInstance | undefined) => {
-  if (!formEl) return;
-  await formEl.validate((valid, fields) => {
+const save = async () => {
+  if (!formCopy.formRef) return;
+  await formCopy.formRef.validate(async (valid: any, fields: any) => {
     if (valid) {
-      emits("updateForm", formCopy);
-      toShow();
+      const value = formCopy;
+      value.value.account = null;
+      value.value.birthday = dayjs(value.value.birthday).format("YYYY-MM-DD");
+      try {
+        if (value.originalValue?.name) {
+          // insert
+          const { data } = await insertUserInfo(value.value);
+          const res = data as CommonResult;
+          if (res.code !== 200) {
+            ElMessage.error(res.message);
+            return;
+          }
+          value.value.id = res.data as number;
+        } else {
+          // update
+          const { data } = await updateUserInfo(value.value);
+          const res = data as CommonResult;
+          if (res.code !== 200) {
+            ElMessage.error(res.message);
+            return;
+          }
+        }
+      } catch (e) {
+        value.value = value.originalValue;
+      } finally {
+        value.originalValue = value.value;
+        value.edit = false;
+        store.updateUserDetail(value.value);
+      }
     } else {
       ElMessage.error(`填写错误`);
     }
   });
 };
 
-const toShow = () => {
-  state.value = true;
-};
 const toEdit = () => {
-  state.value = false;
+  formCopy.edit = true;
 };
 
 const handleAvatarSuccess: UploadProps["onSuccess"] = (
   response,
   uploadFile
 ) => {
-  formCopy.twoInchPhoto = URL.createObjectURL(uploadFile.raw!);
+  formCopy.value.twoInchPhoto = getUploadFileUrl(uploadFile);
 };
 const handleIdCardFrontPhotoSuccess: UploadProps["onSuccess"] = (
   response,
   uploadFile
 ) => {
-  formCopy.idCardFrontPhoto = URL.createObjectURL(uploadFile.raw!);
+  formCopy.value.idCardFrontPhoto = getUploadFileUrl(uploadFile);
 };
 const handleIdCardReversePhotoSuccess: UploadProps["onSuccess"] = (
   response,
   uploadFile
 ) => {
-  formCopy.idCardReversePhoto = URL.createObjectURL(uploadFile.raw!);
+  formCopy.value.idCardReversePhoto = getUploadFileUrl(uploadFile);
 };
 
 const beforeAvatarUpload: UploadProps["beforeUpload"] = (rawFile) => {
@@ -481,6 +509,11 @@ const beforeAvatarUpload: UploadProps["beforeUpload"] = (rawFile) => {
   }
   return true;
 };
+
+function cancel() {
+  formCopy.value = formCopy.originalValue;
+  formCopy.edit = false;
+}
 </script>
 
 <style scoped>

@@ -25,7 +25,7 @@
         "
       >
         <el-row justify="center"
-          ><h1 style="color: white">广西职称评定系统</h1></el-row
+          ><h1 style="color: white">广西职称评定系统 - 单位版</h1></el-row
         >
         <el-row justify="center">
           <div class="login-img"></div>
@@ -80,18 +80,6 @@
                 @click="loginSubmitForm(loginFormRef)"
                 >登录
               </el-button>
-            </el-form-item>
-            <el-form-item>
-              <el-row justify="center" style="width: 100%"
-                ><span>没有账号？</span>
-                <el-link type="primary" @click="toRegister">立即注册</el-link>
-              </el-row>
-              <el-row justify="center" style="width: 100%"
-                ><span>单位人员？</span>
-                <el-link type="primary" @click="to('/company/login')"
-                  >前往单位页面
-                </el-link>
-              </el-row>
             </el-form-item>
           </el-form>
         </div>
@@ -157,6 +145,7 @@ import type { ElForm } from "element-plus";
 import { CommonResult, User, UserDetailInformation } from "@/@types/model";
 import { userLogin, userRegister } from "@/api/person/login";
 import { useInfoStore } from "@/store/info";
+import { companyLogin } from "@/api/company/login";
 
 type FormInstance = InstanceType<typeof ElForm>;
 
@@ -194,7 +183,7 @@ const loginSubmitForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   formEl.validate(async (valid) => {
     if (valid) {
-      const { data } = await userLogin(loginData);
+      const { data } = await companyLogin(loginData);
       const res = data as CommonResult;
       if (res.code === 200) {
         const infoStore = useInfoStore();
@@ -203,7 +192,7 @@ const loginSubmitForm = (formEl: FormInstance | undefined) => {
           userInfo.name = "";
         }
         infoStore.updateUserDetail(userInfo);
-        router.push("/person/manage");
+        router.push("/company/manage");
       } else {
         ElMessage.error(res.message);
       }
@@ -240,9 +229,6 @@ const toLogin = () => {
 const toRegister = () => {
   isLogin.value = false;
 };
-const to = (url: string) => {
-  router.push(url);
-};
 
 const router = useRouter();
 </script>
@@ -251,6 +237,6 @@ const router = useRouter();
   margin-top: 60px;
   width: 380px;
   height: 320px;
-  background-image: url("../../assets/approveProfile.svg");
+  background-image: url("../../assets/approveRequest.svg");
 }
 </style>

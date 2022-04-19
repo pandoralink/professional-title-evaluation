@@ -30,6 +30,37 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import("../views/person/Login.vue"),
   },
   {
+    path: "/company",
+    name: "Company",
+    component: () => import("../views/common/Empty.vue"),
+    children: [
+      {
+        path: "",
+        alias: "login",
+        name: "CompanyLogin",
+        component: () => import("../views/company/Login.vue"),
+      },
+      {
+        path: "manage",
+        name: "CompanyManage",
+        component: () => import("../views/company/Layout.vue"),
+        children: [
+          {
+            path: "",
+            alias: "/company/check",
+            name: "CompanyCheck",
+            component: () => import("../views/company/Check.vue"),
+          },
+          {
+            path: "/company/review-form",
+            name: "CompanyReviewForm",
+            component: () => import("../views/company/ReviewForm.vue"),
+          },
+        ],
+      },
+    ],
+  },
+  {
     path: "/person/manage",
     name: "PersonManage",
     component: () => import("../views/person/Layout.vue"),
@@ -73,15 +104,6 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import("../views/person/PersonSite.vue"),
       },
     ],
-  },
-  {
-    path: "/company",
-    redirect: "/company/login",
-  },
-  {
-    path: "/company/login",
-    name: "CompanyLogin",
-    component: () => import("../views/person/Login.vue"),
   },
   {
     path: "/manage",

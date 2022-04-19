@@ -31,7 +31,7 @@ export const insertUserInfo = (data: UserDetailInformation) => {
 
 export const updateUserInfo = (data: UserDetailInformation) => {
   return axios({
-    url: "/Reptile/update",
+    url: "/user/info",
     method: "put",
     data,
   });

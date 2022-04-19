@@ -1,6 +1,7 @@
 import { AxiosPromise } from "axios";
 import {
   Education,
+  IRequestStructure,
   Paper,
   PerformanceAward,
   PerformancePatent,
@@ -28,13 +29,6 @@ export const createReviewForm = (
   });
 };
 
-export interface IRequestStructure<T> {
-  code: number;
-  message: string;
-  data: T;
-  datetime: string;
-}
-
 export function getReviewForm(id: number): AxiosPromise<
   IRequestStructure<{
     userAllInfo: UserDetailInformation;
@@ -56,3 +50,15 @@ export function getReviewForm(id: number): AxiosPromise<
     },
   });
 }
+
+export const reviewFormCommit = (
+  id: number
+): AxiosPromise<IRequestStructure<null>> => {
+  return axios({
+    url: "/reviewform/commit",
+    method: "post",
+    data: {
+      id,
+    },
+  });
+};

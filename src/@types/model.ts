@@ -130,7 +130,7 @@ export interface UserSimpleInformation extends FormState {
   birthday: string;
   phoneNumber: string;
   email: string;
-  account: string;
+  account: string | null;
 }
 
 export interface UserDetailInformation extends UserSimpleInformation {
@@ -172,4 +172,11 @@ export interface ReviewMeeting {
   name: string;
   level: string;
   series: string;
+}
+
+export interface IRequestStructure<T> {
+  code: number;
+  message: string;
+  data: T;
+  datetime: string;
 }

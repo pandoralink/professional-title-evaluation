@@ -1,7 +1,6 @@
 import axios from "@/utils/axios";
-import { ReviewFormSimple } from "@/@types/model";
+import { IRequestStructure, ReviewFormSimple } from "@/@types/model";
 import { AxiosPromise } from "axios";
-import { IRequestStructure } from "@/api/person/reviewForm";
 
 export const getDeclarationSeries = () => {
   return axios({
