@@ -88,11 +88,7 @@ export interface ReviewFormDetailed {
   reviewFormSimple: ReviewFormSimple;
 }
 
-enum ReviewStatus {
-  DONE = "已审核",
-  PREPARE = "待审核",
-  UNFINISHED = "未完成",
-}
+export type ReviewStatus = "已审核" | "待审核" | "失败" | "未完成";
 
 export interface ReviewFormSimple {
   id: number;

@@ -4,6 +4,9 @@
   <el-row>
     <template v-for="(item, index) in record" :key="index">
       <el-col :span="12">
+        <el-row>
+          <steps :status="item.status" />
+        </el-row>
         <el-row
           align="middle"
           style="border: 1px solid; cursor: pointer"
@@ -30,6 +33,7 @@ import { reactive } from "vue";
 import { ReviewFormSimple } from "@/@types/model";
 import { getReviewRecord } from "@/api/person/reviewMeeting";
 import { useInfoStore } from "@/store/info";
+import Steps from "@/components/Steps.vue";
 
 const router = useRouter();
 

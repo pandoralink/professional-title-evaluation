@@ -101,7 +101,6 @@
 import BaseListItem from "@/components/BaseListItem.vue";
 import { reactive, ref } from "vue";
 import UserInfo from "@/components/UserInfo.vue";
-import { UserDetailInformation } from "@/@types/model";
 import { useInfoStore } from "@/store/info";
 import EducationForm from "@/components/person/EducationForm.vue";
 import { ElMessage } from "element-plus";

@@ -9,4 +9,9 @@ module.exports = {
       },
     },
   },
+  chainWebpack: (config) => {
+    if (process.env.NODE_ENV === "production") {
+      config.plugin("CompressionPlugin").use("compression-webpack-plugin");
+    }
+  },
 };
