@@ -1,6 +1,6 @@
 <template>
   <base-list-item title="论文" :require="require">
-    <template #left>
+    <template #left v-if="editable">
       <el-button
         type="primary"
         :icon="Edit"
@@ -23,10 +23,17 @@
             <div>{{ "刊号：" + item.value.publicationNumber }}</div>
             <div>{{ "论文名称：" + item.value.name }}</div>
           </el-col>
-          <div style="position: absolute; right: 0; top: 0">
+          <div style="position: absolute; right: 0; top: 0" v-if="editable">
             <el-button type="primary" @click="toEdit(index)">编辑</el-button>
             <el-button type="danger" @click="deleteItem(index)">删除</el-button>
           </div>
+          <review-button-group
+            v-if="reivew"
+            :id="item.value.id"
+            :status="item.value.status"
+            @reject="reject(item.value)"
+            @success="success(item.value)"
+          />
         </template>
         <el-form
           v-else
@@ -125,13 +132,18 @@ import { useInfoStore } from "@/store/info";
 import { addEmptyFormItem, addFormItem, cancel, getArray } from "@/mixins";
 import { deleteWorkExperience } from "@/api/person/workExperience";
 import { insertPaper, updatePaper } from "@/api/person/paper";
+import { updatePaperStatus } from "@/api/company/reviewForm";
 
 interface Props {
   require?: boolean;
+  editable: boolean;
+  review: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   require: false,
+  editable: true,
+  review: false,
 });
 
 const store = useInfoStore();
@@ -234,6 +246,24 @@ const deleteItem = async (index: number) => {
 const toEdit = (index: number) => {
   state[index].edit = true;
 };
+
+type FormDataType = Paper;
+
+async function success(d: FormDataType) {
+  const { data: res } = await updatePaperStatus(d.id, "已通过");
+  if (res.code !== 200) {
+    ElMessage.error(res.message);
+    return;
+  }
+}
+
+async function reject(d: FormDataType) {
+  const { data: res } = await updatePaperStatus(d.id, "未通过");
+  if (res.code !== 200) {
+    ElMessage.error(res.message);
+    return;
+  }
+}
 </script>
 
 <style scoped></style>

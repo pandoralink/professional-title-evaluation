@@ -1,42 +1,64 @@
 <template>
   <h2>职称申请记录</h2>
-  <el-alert title="先水一下" type="info" style="margin: 20px 0" />
-  <el-row>
-    <template v-for="(item, index) in record" :key="index">
-      <el-col :span="12">
-        <el-row>
-          <steps :status="item.status" />
-        </el-row>
-        <el-row
-          align="middle"
-          style="border: 1px solid; cursor: pointer"
-          @click="toReviewMeetingForm('/person/title/apply', index)"
-        >
-          <el-col :span="2">{{ index + 1 }}</el-col>
-          <el-col :span="11">
-            <div>{{ "申报年度：" + item.reviewYear }}</div>
-            <div>{{ "申报等级：" + item.level }}</div>
-          </el-col>
-          <el-col :span="11">
-            <div>{{ "申报系列：" + item.declarationSeries }}</div>
-            <div>{{ "创建时间：" + item.createTime }}</div>
-          </el-col>
-        </el-row>
+  <div
+    v-for="(item, index) in record"
+    :key="index"
+    style="
+      border: 1px solid transparent;
+      border-radius: 10px;
+      padding: 20px;
+      margin: 0 0 20px 0;
+      background: #fafafa;
+    "
+  >
+    <steps
+      style="cursor: pointer"
+      @click="toReviewMeetingForm('/person/title/apply', index)"
+      :status="item.status"
+    />
+    <el-row style="margin: 20px 0 0 0" align="middle">
+      <el-col :span="11">
+        <div>{{ "申报年度：" + item.reviewYear }}</div>
+        <div>{{ "申报等级：" + item.level }}</div>
       </el-col>
-    </template>
-  </el-row>
+      <el-col :span="12">
+        <div>{{ "申报系列：" + item.declarationSeries }}</div>
+        <div>{{ "创建时间：" + item.createTime }}</div>
+      </el-col>
+      <el-col v-if="item.status === '失败'" :span="1" style="cursor: pointer">
+        <el-tooltip
+          v-if="!isShowErrorReason"
+          effect="light"
+          content="查看失败原因"
+          placement="bottom"
+        >
+          <el-icon :size="24" @click="showErrorReason">
+            <arrow-right-bold />
+          </el-icon>
+        </el-tooltip>
+        <el-icon v-else :size="24" @click="showErrorReason">
+          <arrow-down-bold />
+        </el-icon>
+      </el-col>
+    </el-row>
+  </div>
 </template>
 
 <script lang="ts" setup>
 import { useRouter } from "vue-router";
-import { reactive } from "vue";
+import { reactive, ref } from "vue";
 import { ReviewFormSimple } from "@/@types/model";
 import { getReviewRecord } from "@/api/person/reviewMeeting";
 import { useInfoStore } from "@/store/info";
 import Steps from "@/components/Steps.vue";
+import { ArrowDownBold, ArrowRightBold } from "@element-plus/icons";
 
 const router = useRouter();
 
+const isShowErrorReason = ref(false);
+const showErrorReason = () => {
+  isShowErrorReason.value = !isShowErrorReason.value;
+};
 const store = useInfoStore();
 const record = reactive<ReviewFormSimple[]>([]);
 const init = (async () => {

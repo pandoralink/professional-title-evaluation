@@ -1,6 +1,6 @@
 <template>
   <base-list-item title="个人信息" :require="require">
-    <template #left>
+    <template #left v-if="editable">
       <el-button type="primary" :icon="Edit" round @click="toEdit">
         编辑
       </el-button>
@@ -304,7 +304,6 @@ import { dayjs } from "element-plus/es";
 import { useInfoStore } from "@/store/info";
 import { insertUserInfo, updateUserInfo } from "@/api/person/userInfo";
 import { getUploadFileUrl } from "@/utils/util";
-import { getArray } from "@/mixins";
 
 interface Props {
   /**
@@ -314,11 +313,15 @@ interface Props {
   defaultState: boolean;
   require: boolean;
   form: UserDetailInformation;
+  editable: boolean;
+  review?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   defaultState: true,
   require: false,
+  editable: true,
+  review: false,
 });
 
 const state = ref(props.defaultState);
@@ -333,7 +336,9 @@ const formCopy = reactive<ReviewFormData<UserDetailInformation>>({
   formRef: ref<FormInstance>(),
   value: store.state.userDetail,
   originalValue: store.state.userDetail,
-  edit: store.state.userDetail.name === "",
+  edit:
+    store.state.userDetail.idCardNumber === null ||
+    store.state.userDetail.idCardNumber === "",
 });
 
 const rules = reactive({

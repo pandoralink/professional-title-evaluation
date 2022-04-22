@@ -1,6 +1,6 @@
 <template>
   <base-list-item title="学历情况" :require="require">
-    <template #left>
+    <template #left v-if="editable">
       <el-button type="primary" :icon="Edit" round @click="addEmpty">
         添加
       </el-button>
@@ -25,10 +25,17 @@
           >
             <div style="max-width: 400px">{{ "证件材料：" + item }}</div>
           </el-col>
-          <div style="position: absolute; right: 0; top: 0">
+          <div style="position: absolute; right: 0; top: 0" v-if="editable">
             <el-button type="primary" @click="toEdit(index)">编辑</el-button>
             <el-button type="danger" @click="deleteItem(index)">删除</el-button>
           </div>
+          <review-button-group
+            v-if="review"
+            :id="item.education.id"
+            :status="item.education.status"
+            @reject="reject(item.education)"
+            @success="success(item.education)"
+          />
         </template>
         <!-- TODO: 数据有限，无法做到下拉框选择学校和专业，使用 input 代替 -->
         <el-form
@@ -122,7 +129,7 @@
 </template>
 
 <script lang="ts" setup>
-import { CommonResult, Education } from "@/@types/model";
+import { CommonResult, Education, Paper } from "@/@types/model";
 import { computed, reactive, ref } from "vue";
 import BaseListItem from "@/components/BaseListItem.vue";
 import { Edit, UploadFilled } from "@element-plus/icons";
@@ -136,14 +143,20 @@ import {
   insertEducation,
   updateEducation,
 } from "@/api/person/education";
+import { updateEducationStatus } from "@/api/company/reviewForm";
+import ReviewButtonGroup from "@/components/ReviewButtonGroup.vue";
 
 interface Props {
   require: boolean;
+  editable: boolean;
+  review: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   defaultState: true,
   require: false,
+  editable: true,
+  review: false,
 });
 
 const store = useInfoStore();
@@ -344,6 +357,24 @@ const modifyActiveIndex = (index: number) => {
 const toEdit = (index: number) => {
   formCopy[index].edit = true;
 };
+
+type FormDataType = Education;
+
+async function success(d: FormDataType) {
+  const { data: res } = await updateEducationStatus(d.id, "已通过");
+  if (res.code !== 200) {
+    ElMessage.error(res.message);
+    return;
+  }
+}
+
+async function reject(d: FormDataType) {
+  const { data: res } = await updateEducationStatus(d.id, "未通过");
+  if (res.code !== 200) {
+    ElMessage.error(res.message);
+    return;
+  }
+}
 </script>
 
 <style scoped></style>

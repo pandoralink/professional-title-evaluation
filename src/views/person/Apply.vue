@@ -46,11 +46,11 @@
         </template>
         <template #default>
           <user-info
+            :editable="editable"
             :form="data.userInfo"
             :default-state="data.userInfo.idCardNumber !== undefined"
             :require="data.userInfo.id === undefined"
           />
-          <!-- TODO: 叫评审会真的合适吗？ -->
           <base-list-item title="评审会">
             <template #content>
               <el-row class="content">
@@ -76,17 +76,28 @@
               </el-row>
             </template>
           </base-list-item>
-          <education-form require />
-          <work-experience require />
-          <paper />
-          <performance-award />
-          <performance-patent />
-          <performance-result />
-          <talent-introduction-material />
+          <education-form require :editable="editable" />
+          <work-experience require :editable="editable" />
+          <paper :editable="editable" />
+          <performance-award :editable="editable" />
+          <performance-patent :editable="editable" />
+          <performance-result :editable="editable" />
+          <talent-introduction-material
+            :editable="editable"
+            :review="isReview"
+          />
           <el-row
             justify="center"
             style="background: white; padding: 20px"
-            v-if="store.state.reviewFormSimple.status === '未完成'"
+            v-if="editable"
+          >
+            <el-button @click="to('/person/manage')">保存</el-button>
+            <el-button type="primary" @click="apply">申请</el-button>
+          </el-row>
+          <el-row
+            justify="center"
+            style="background: white; padding: 20px"
+            v-if="isReview"
           >
             <el-button @click="to('/person/manage')">保存</el-button>
             <el-button type="primary" @click="apply">申请</el-button>
@@ -101,7 +112,6 @@
 import BaseListItem from "@/components/BaseListItem.vue";
 import { reactive, ref } from "vue";
 import UserInfo from "@/components/UserInfo.vue";
-import { UserDetailInformation } from "@/@types/model";
 import { useInfoStore } from "@/store/info";
 import EducationForm from "@/components/person/EducationForm.vue";
 import { ElMessage } from "element-plus";
@@ -116,12 +126,15 @@ import { getReviewForm, reviewFormCommit } from "@/api/person/reviewForm";
 
 const loading = ref(true);
 const store = useInfoStore();
+const editable = store.state.reviewFormSimple.status === "未完成";
+const isReview = !editable;
 const init = (async () => {
   const { data: res } = await getReviewForm(store.state.reviewFormSimple.id);
   if (res.code !== 200) {
     ElMessage.error(res.message);
     return;
   }
+  store.updateUserDetail(res.data.userAllInfo);
   store.updateEducations(res.data.education);
   store.updateWorkExperience(res.data.workExperience);
   store.updatePapers(res.data.paper);

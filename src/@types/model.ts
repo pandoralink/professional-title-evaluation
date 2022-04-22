@@ -18,7 +18,7 @@ export interface Department {
   password: string;
 }
 
-export interface Education {
+export interface Education extends ReviewFormStatus {
   id: number;
   userId: number;
   graduationTime: string;
@@ -95,15 +95,15 @@ export interface ReviewFormSimple {
   userId: number;
   createTime: string;
   reviewYear: string;
-  rateSeriesId: string;
-  rateSpecialtyId: string;
+  rateSeriesId?: string;
+  rateSpecialtyId?: string;
   reviewMeetingId: number;
   status: ReviewStatus;
   level: string;
   declarationSeries: string;
 }
 
-export interface TalentIntroductionMaterial {
+export interface TalentIntroductionMaterial extends ReviewFormStatus {
   id: number;
   reviewFormId: number | null;
   name: string;
@@ -116,6 +116,13 @@ export interface FormState {
    * false：编辑
    */
   state?: boolean;
+}
+
+/**
+ * 表单评审状态
+ */
+export interface ReviewFormStatus {
+  status?: string;
 }
 
 export interface UserSimpleInformation extends FormState {

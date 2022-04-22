@@ -51,20 +51,20 @@
 </template>
 
 <script lang="ts" setup>
-import { QuestionFilled } from "@element-plus/icons";
 import { useRouter } from "vue-router";
 import { dayjs } from "element-plus/es";
 import { reactive, ref, watch } from "vue";
-import { CommonResult, ReviewMeeting } from "@/@types/model";
+import { CommonResult, ReviewMeeting, ReviewStatus } from "@/@types/model";
 import {
   getDeclarationSeries,
   getReviewMeetingName,
 } from "@/api/person/reviewMeeting";
 import { ElMessage, FormInstance } from "element-plus";
 import { createReviewForm } from "@/api/person/reviewForm";
+import { useInfoStore } from "@/store/info";
 
 const router = useRouter();
-
+const store = useInfoStore();
 const ruleFormRef = ref<FormInstance>();
 const state = reactive<ReviewMeeting>({
   id: undefined,
@@ -146,6 +146,16 @@ const submit = async (formEl: FormInstance | undefined) => {
       );
       const res = data as CommonResult;
       if (res.code === 200) {
+        store.updateReviewFormSimple({
+          id: res.data as number,
+          userId: store.state.userDetail.id,
+          createTime: dayjs(new Date()).format("YYYY-MM-DD"),
+          reviewYear: dayjs(new Date()).format("YYYY"),
+          reviewMeetingId: state.id as number,
+          status: "未完成",
+          level: state.level,
+          declarationSeries: state.series,
+        });
         toApply();
       } else {
         ElMessage.error(`出错了`);

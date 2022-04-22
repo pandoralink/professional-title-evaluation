@@ -2,6 +2,7 @@
   <base-list-item title="人才引进材料" :require="require">
     <template #left>
       <el-button
+        v-if="editable"
         type="primary"
         :icon="Edit"
         round
@@ -23,10 +24,19 @@
           >
             <div style="max-width: 400px">{{ "证件材料：" + item }}</div>
           </el-col>
-          <div style="position: absolute; right: 0; top: 0">
+          <div style="position: absolute; right: 0; top: 0" v-if="editable">
             <el-button type="primary" @click="toEdit(index)">编辑</el-button>
             <el-button type="danger" @click="deleteItem(index)">删除</el-button>
           </div>
+          <review-button-group
+            v-if="reivew"
+            :id="item.value.id"
+            :status="item.value.status"
+            @reject="reject(item.value, updateTalentIntroductionmaterialStatus)"
+            @success="
+              success(item.value, updateTalentIntroductionmaterialStatus)
+            "
+          />
         </template>
         <el-form
           v-else
@@ -37,9 +47,9 @@
           label-width="100px"
         >
           <el-row>
-            <el-col :span="8">
+            <el-col :span="24">
               <el-form-item prop="name" label="材料名称">
-                <el-input v-model="item.value.name" />
+                <el-input v-model="item.value.name" placeholder="材料名称" />
               </el-form-item>
             </el-col>
           </el-row>
@@ -81,6 +91,7 @@
         </el-form>
       </el-row>
     </template>
+    <slot name="errorReason"></slot>
   </base-list-item>
 </template>
 
@@ -102,13 +113,20 @@ import {
   insertTalentIntroductionMaterial,
   updateTalentIntroductionMaterial,
 } from "@/api/person/talentIntroductionMaterial";
+import ReviewButtonGroup from "@/components/ReviewButtonGroup.vue";
+import { updateTalentIntroductionmaterialStatus } from "@/api/company/reviewForm";
+import { reject, success } from "@/mixins/review";
 
 interface Props {
   require?: boolean;
+  editable: boolean;
+  review?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   require: false,
+  editable: true,
+  review: false,
 });
 
 const store = useInfoStore();

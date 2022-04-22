@@ -1,6 +1,6 @@
 <template>
   <base-list-item title="业绩专利" :require="require">
-    <template #left>
+    <template #left v-if="editable">
       <el-button
         type="primary"
         :icon="Edit"
@@ -28,7 +28,7 @@
           >
             <div style="max-width: 400px">{{ "证件材料：" + item }}</div>
           </el-col>
-          <div style="position: absolute; right: 0; top: 0">
+          <div style="position: absolute; right: 0; top: 0" v-if="editable">
             <el-button type="primary" @click="toEdit(index)">编辑</el-button>
             <el-button type="danger" @click="deleteItem(index)">删除</el-button>
           </div>
@@ -127,10 +127,14 @@ import {
 
 interface Props {
   require?: boolean;
+  editable: boolean;
+  review: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   require: false,
+  editable: true,
+  review: false,
 });
 
 const store = useInfoStore();
