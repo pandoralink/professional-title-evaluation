@@ -32,6 +32,13 @@
             <el-button type="primary" @click="toEdit(index)">编辑</el-button>
             <el-button type="danger" @click="deleteItem(index)">删除</el-button>
           </div>
+          <review-button-group
+            v-if="review"
+            :id="item.value.id"
+            :status="item.value.status"
+            @reject="reject(item.value)"
+            @success="success(item.value)"
+          />
         </template>
         <el-form
           v-else
@@ -124,6 +131,8 @@ import {
   insertPerformancePatent,
   updatePerformancePatent,
 } from "@/api/person/performancePatent";
+import { updatePerformancepatentStatus } from "@/api/company/reviewForm";
+import ReviewButtonGroup from "@/components/ReviewButtonGroup.vue";
 
 interface Props {
   require?: boolean;
@@ -131,7 +140,7 @@ interface Props {
   review: boolean;
 }
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   require: false,
   editable: true,
   review: false,
@@ -245,6 +254,23 @@ const modifyActiveIndex = (index: number) => {
 const toEdit = (index: number) => {
   state[index].edit = true;
 };
+type FormDataType = PerformancePatent;
+
+async function success(d: FormDataType) {
+  const { data: res } = await updatePerformancepatentStatus(d.id, "已通过");
+  if (res.code !== 200) {
+    ElMessage.error(res.message);
+    return;
+  }
+}
+
+async function reject(d: FormDataType) {
+  const { data: res } = await updatePerformancepatentStatus(d.id, "未通过");
+  if (res.code !== 200) {
+    ElMessage.error(res.message);
+    return;
+  }
+}
 </script>
 
 <style scoped></style>

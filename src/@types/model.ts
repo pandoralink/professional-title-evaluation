@@ -30,7 +30,7 @@ export interface Education extends ReviewFormStatus {
   materials: Array<string>;
 }
 
-export interface Paper {
+export interface Paper extends ReviewFormStatus {
   id: number;
   reviewFormId: number | null;
   publishTime: string;
@@ -41,7 +41,7 @@ export interface Paper {
   name: string;
 }
 
-export interface PerformanceAward {
+export interface PerformanceAward extends ReviewFormStatus {
   id: number;
   reviewFormId: number | null;
   name: string;
@@ -52,7 +52,7 @@ export interface PerformanceAward {
   materials: Array<string>;
 }
 
-export interface PerformancePatent {
+export interface PerformancePatent extends ReviewFormStatus {
   id: number;
   reviewFormId: number | null;
   name: string;
@@ -62,7 +62,7 @@ export interface PerformancePatent {
   materials: Array<string>;
 }
 
-export interface PerformanceResult {
+export interface PerformanceResult extends ReviewFormStatus {
   id: number;
   reviewFormId: number | null;
   name: string;
@@ -149,7 +149,7 @@ export interface UserDetailInformation extends UserSimpleInformation {
   executive: string;
 }
 
-export interface WorkExperience {
+export interface WorkExperience extends ReviewFormStatus {
   id: number;
   userId: number;
   separationTime: string;

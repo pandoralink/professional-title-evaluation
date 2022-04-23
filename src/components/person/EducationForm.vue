@@ -60,7 +60,7 @@
             <el-col :span="8">
               <el-form-item prop="degree" label="学历">
                 <el-select v-model="item.education.degree" placeholder="学历">
-                  <el-option label="本科" value="本科" />
+                  <el-option label="学士" value="学士" />
                   <el-option label="硕士" value="硕士" />
                   <el-option label="博士" value="博士" />
                 </el-select>
@@ -260,6 +260,9 @@ const save = async (value: {
 }) => {
   if (!value.formRef) return;
   await value.formRef.validate(async (valid, fields) => {
+    value.education.graduationTime = dayjs(
+      value.education.graduationTime
+    ).format("YYYY-MM-DD");
     if (valid) {
       if (Object.keys(value.originalEducation).length === 0) {
         // insert

@@ -28,7 +28,7 @@
             <el-button type="danger" @click="deleteItem(index)">删除</el-button>
           </div>
           <review-button-group
-            v-if="reivew"
+            v-if="review"
             :id="item.value.id"
             :status="item.value.status"
             @reject="reject(item.value)"
@@ -133,6 +133,7 @@ import { addEmptyFormItem, addFormItem, cancel, getArray } from "@/mixins";
 import { deleteWorkExperience } from "@/api/person/workExperience";
 import { insertPaper, updatePaper } from "@/api/person/paper";
 import { updatePaperStatus } from "@/api/company/reviewForm";
+import ReviewButtonGroup from "@/components/ReviewButtonGroup.vue";
 
 interface Props {
   require?: boolean;
@@ -140,7 +141,7 @@ interface Props {
   review: boolean;
 }
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   require: false,
   editable: true,
   review: false,
@@ -222,6 +223,7 @@ const save = async (value: ReviewFormData<Paper>) => {
           }
         }
       } finally {
+        // FIXME: 只有成功来才可以赋值和更新 Array
         value.originalValue = value.value;
         value.edit = false;
         store.updatePapers(getArray(state));

@@ -34,6 +34,20 @@ export const updateEducationStatus = (
   });
 };
 
+export const updateWorkExperienceStatus = (
+  id: number,
+  status: string
+): AxiosPromise<CommonResult> => {
+  return axios({
+    url: "/workexperience/status",
+    method: "post",
+    params: {
+      id,
+      status,
+    },
+  });
+};
+
 export const updatePerformanceawardStatus = (
   id: number,
   status: string

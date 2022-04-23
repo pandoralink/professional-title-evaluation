@@ -15,6 +15,7 @@
             <el-skeleton-item v-for="i in 11" :key="i" />
           </template>
           <template #default>
+            <!-- TODO: 考虑换一个监听器 -->
             <ul
               v-if="!loading"
               style="margin: 0"
@@ -78,11 +79,11 @@
             </template>
           </base-list-item>
           <education-form require :editable="editable" :review="isReview" />
-          <work-experience require :editable="editable" />
-          <paper :editable="editable" />
-          <performance-award :editable="editable" />
-          <performance-patent :editable="editable" />
-          <performance-result :editable="editable" />
+          <work-experience require :editable="editable" :review="isReview" />
+          <paper :editable="editable" :review="isReview" />
+          <performance-award :editable="editable" :review="isReview" />
+          <performance-patent :editable="editable" :review="isReview" />
+          <performance-result :editable="editable" :review="isReview" />
           <talent-introduction-material
             :editable="editable"
             :review="isReview"
@@ -100,7 +101,7 @@
             style="background: white; padding: 20px"
             v-if="isReview"
           >
-            <el-button type="danger" @click="reject">拒绝 </el-button>
+            <el-button type="danger" @click="reject">拒绝</el-button>
             <el-button type="primary" @click="success">通过</el-button>
           </el-row>
         </template>
@@ -131,7 +132,7 @@ import {
 
 const loading = ref(true);
 const store = useInfoStore();
-const editable = store.state.reviewFormSimple.status === "未完成";
+const editable = false;
 const isReview = !editable;
 const init = (async () => {
   const { data: res } = await getReviewForm(store.state.reviewFormSimple.id);

@@ -29,13 +29,11 @@
             <el-button type="danger" @click="deleteItem(index)">删除</el-button>
           </div>
           <review-button-group
-            v-if="reivew"
+            v-if="review"
             :id="item.value.id"
             :status="item.value.status"
-            @reject="reject(item.value, updateTalentIntroductionmaterialStatus)"
-            @success="
-              success(item.value, updateTalentIntroductionmaterialStatus)
-            "
+            @reject="reject(item.value)"
+            @success="success(item.value)"
           />
         </template>
         <el-form
@@ -115,7 +113,6 @@ import {
 } from "@/api/person/talentIntroductionMaterial";
 import ReviewButtonGroup from "@/components/ReviewButtonGroup.vue";
 import { updateTalentIntroductionmaterialStatus } from "@/api/company/reviewForm";
-import { reject, success } from "@/mixins/review";
 
 interface Props {
   require?: boolean;
@@ -222,6 +219,30 @@ const modifyActiveIndex = (index: number) => {
 const toEdit = (index: number) => {
   state[index].edit = true;
 };
+
+type FormDataType = TalentIntroductionMaterial;
+
+async function success(d: FormDataType) {
+  const { data: res } = await updateTalentIntroductionmaterialStatus(
+    d.id,
+    "已通过"
+  );
+  if (res.code !== 200) {
+    ElMessage.error(res.message);
+    return;
+  }
+}
+
+async function reject(d: FormDataType) {
+  const { data: res } = await updateTalentIntroductionmaterialStatus(
+    d.id,
+    "未通过"
+  );
+  if (res.code !== 200) {
+    ElMessage.error(res.message);
+    return;
+  }
+}
 </script>
 
 <style scoped></style>

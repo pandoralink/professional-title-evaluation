@@ -46,14 +46,19 @@
 
 <script lang="ts" setup>
 import { useRouter } from "vue-router";
-import { reactive } from "vue";
+import { reactive, ref } from "vue";
 import { ReviewFormSimple } from "@/@types/model";
 import { useInfoStore } from "@/store/info";
 import { getReviewForm } from "@/api/company/reviewForm";
 import Steps from "@/components/Steps.vue";
+import { ArrowDownBold, ArrowRightBold } from "@element-plus/icons";
 
 const router = useRouter();
 
+const isShowErrorReason = ref(false);
+const showErrorReason = () => {
+  isShowErrorReason.value = !isShowErrorReason.value;
+};
 const store = useInfoStore();
 const record = reactive<ReviewFormSimple[]>([]);
 const init = (async () => {
