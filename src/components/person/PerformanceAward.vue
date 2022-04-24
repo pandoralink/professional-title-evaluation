@@ -89,7 +89,6 @@
           </el-row>
           <el-row>
             <el-form-item prop="materials" label="证件材料">
-              <!-- TODO: materials 为链接字符串，没有相应的中文名，无法展示已经上传的文件名 -->
               <el-upload
                 @click="modifyActiveIndex(index)"
                 drag

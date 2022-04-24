@@ -25,21 +25,21 @@
         <div>{{ "申报系列：" + item.declarationSeries }}</div>
         <div>{{ "创建时间：" + item.createTime }}</div>
       </el-col>
-      <el-col v-if="item.status === '失败'" :span="1" style="cursor: pointer">
-        <el-tooltip
-          v-if="!isShowErrorReason"
-          effect="light"
-          content="查看失败原因"
-          placement="bottom"
-        >
-          <el-icon :size="24" @click="showErrorReason">
-            <arrow-right-bold />
-          </el-icon>
-        </el-tooltip>
-        <el-icon v-else :size="24" @click="showErrorReason">
-          <arrow-down-bold />
-        </el-icon>
-      </el-col>
+      <!--      <el-col v-if="item.status === '失败'" :span="1" style="cursor: pointer">-->
+      <!--        <el-tooltip-->
+      <!--          v-if="!isShowErrorReason"-->
+      <!--          effect="light"-->
+      <!--          content="查看失败原因"-->
+      <!--          placement="bottom"-->
+      <!--        >-->
+      <!--                <el-icon :size="24" @click="showErrorReason">-->
+      <!--                  <arrow-right-bold />-->
+      <!--          </el-icon>-->
+      <!--        </el-tooltip>-->
+      <!--        <el-icon v-else :size="24" @click="showErrorReason">-->
+      <!--          <arrow-down-bold />-->
+      <!--        </el-icon>-->
+      <!--      </el-col>-->
     </el-row>
   </div>
 </template>

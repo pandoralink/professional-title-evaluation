@@ -18,12 +18,13 @@
             <div>{{ "毕业证编号：" + item.education.educationNumber }}</div>
             <div>{{ "毕业时间：" + iTime[index] }}</div>
           </el-col>
-          <el-col
-            :span="12"
-            v-for="(item, index) of item.education.materials"
-            :key="index"
-          >
-            <div style="max-width: 400px">{{ "证件材料：" + item }}</div>
+          <el-col :span="24">
+            <div style="margin-bottom: 10px">证件材料：</div>
+            <div style="display: flex">
+              <template v-for="i of 3" :key="i">
+                <my-image :src="item.education.materials[0]" />
+              </template>
+            </div>
           </el-col>
           <div style="position: absolute; right: 0; top: 0" v-if="editable">
             <el-button type="primary" @click="toEdit(index)">编辑</el-button>
@@ -145,6 +146,7 @@ import {
 } from "@/api/person/education";
 import { updateEducationStatus } from "@/api/company/reviewForm";
 import ReviewButtonGroup from "@/components/ReviewButtonGroup.vue";
+import MyImage from "@/components/MyImage.vue";
 
 interface Props {
   require: boolean;

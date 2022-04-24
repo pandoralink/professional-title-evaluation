@@ -433,3 +433,9 @@ body {
   flex-wrap: wrap;
   margin-left: 20px
 }
+
+.review-button-group {
+  position: absolute;
+  right: 0;
+  top: 0;
+}

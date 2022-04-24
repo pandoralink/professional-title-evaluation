@@ -200,6 +200,7 @@ async function success() {
     ElMessage.error(res.message);
     return;
   }
+  to("/company/check");
 }
 
 async function reject() {
@@ -211,6 +212,7 @@ async function reject() {
     ElMessage.error(res.message);
     return;
   }
+  to("/company/check");
 }
 </script>
 

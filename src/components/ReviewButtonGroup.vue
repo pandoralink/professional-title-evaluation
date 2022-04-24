@@ -1,13 +1,18 @@
 <template>
-  <!-- TODO: Button 不直观，应该采用单选框 - 按钮样式 - radio -->
-  <el-button type="danger" :icon="Edit" round @click="reject"> 拒绝</el-button>
-  <el-button type="success" :icon="Edit" round @click="success">
-    通过
-  </el-button>
+  <el-radio-group
+    class="review-button-group"
+    v-model="radio"
+    size="large"
+    @change="change"
+  >
+    <el-radio-button v-if="false" label="待审核" />
+    <el-radio-button label="未通过">拒绝</el-radio-button>
+    <el-radio-button label="已通过">通过</el-radio-button>
+  </el-radio-group>
 </template>
 
 <script setup lang="ts">
-import { Edit } from "@element-plus/icons";
+import { ref } from "vue";
 
 const props = defineProps<{
   id: number;
@@ -25,6 +30,13 @@ const reject = () => {
 const success = () => {
   emits("success");
 };
-</script>
 
-<style scoped></style>
+const radio = ref(props.status);
+const change = (label: "拒绝" | "通过") => {
+  if (label === "拒绝") {
+    reject();
+  } else {
+    success();
+  }
+};
+</script>
