@@ -310,10 +310,10 @@ interface Props {
    * false：初始状态默认编辑
    * true：初始状态默认展示内容
    */
-  defaultState: boolean;
-  require: boolean;
+  defaultState?: boolean;
+  require?: boolean;
   form: UserDetailInformation;
-  editable: boolean;
+  editable?: boolean;
   review?: boolean;
 }
 

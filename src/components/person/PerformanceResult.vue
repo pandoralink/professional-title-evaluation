@@ -23,12 +23,29 @@
             <div>{{ "项目的效益：" + item.value.benefit }}</div>
             <div>{{ "项目专利：" + item.value.patent }}</div>
           </el-col>
-          <el-col
-            :span="12"
-            v-for="(item, index) of item.value.materials"
-            :key="index"
-          >
-            <div style="max-width: 400px">{{ "证件材料：" + item }}</div>
+          <el-col :span="24">
+            <div style="margin-bottom: 10px">项目材料扫描件：</div>
+            <div style="display: flex">
+              <template v-for="i of item.value.projectMaterials" :key="i">
+                <my-image :src="i" :show-delete="false" />
+              </template>
+            </div>
+          </el-col>
+          <el-col :span="24">
+            <div style="margin-bottom: 10px">个人项目任职证明扫描件：</div>
+            <div style="display: flex">
+              <template v-for="i of item.value.tenureMaterials" :key="i">
+                <my-image :src="i" :show-delete="false" />
+              </template>
+            </div>
+          </el-col>
+          <el-col :span="24">
+            <div style="margin-bottom: 10px">项目获奖扫描件：</div>
+            <div style="display: flex">
+              <template v-for="i of item.value.resultMaterials" :key="i">
+                <my-image :src="i" :show-delete="false" />
+              </template>
+            </div>
           </el-col>
           <div style="position: absolute; right: 0; top: 0" v-if="editable">
             <el-button type="primary" @click="toEdit(index)">编辑</el-button>
@@ -99,59 +116,68 @@
             </el-col>
           </el-row>
           <el-row>
-            <el-form-item prop="projectMaterials" label="证件材料">
+            <el-form-item prop="projectMaterials" label="项目材料扫描件">
               <!-- 二次封装 upload 组件 -->
+              <div style="display: flex">
+                <template v-for="i of item.value.projectMaterials" :key="i">
+                  <my-image :src="i" :show-delete="true" />
+                </template>
+              </div>
               <el-upload
                 @click="modifyProjectMaterialsActiveIndex(index)"
-                drag
+                class="avatar-uploader header"
                 action="/prefix/upload"
-                multiple
+                :show-file-list="false"
                 name="files"
                 with-credentials
                 :on-success="handleProjectMaterialsSuccess"
+                :before-upload="beforeImageUpload"
               >
-                <el-icon class="el-icon--upload">
-                  <upload-filled />
+                <el-icon class="avatar-uploader-icon">
+                  <Plus />
                 </el-icon>
-                <div class="el-upload__text">
-                  将您的证书材料拖到这里上传或者 <em>点击选择您的材料</em>
-                </div>
               </el-upload>
             </el-form-item>
-            <el-form-item prop="tenureMaterials" label="证件材料">
+            <el-form-item prop="tenureMaterials" label="个人项目任职证明扫描件">
+              <div style="display: flex">
+                <template v-for="i of item.value.tenureMaterials" :key="i">
+                  <my-image :src="i" :show-delete="true" />
+                </template>
+              </div>
               <el-upload
                 @click="modifyTenureMaterialsActiveIndex(index)"
-                drag
+                class="avatar-uploader header"
                 action="/prefix/upload"
-                multiple
+                :show-file-list="false"
                 name="files"
                 with-credentials
                 :on-success="handleTenureMaterialsSuccess"
+                :before-upload="beforeImageUpload"
               >
-                <el-icon class="el-icon--upload">
-                  <upload-filled />
+                <el-icon class="avatar-uploader-icon">
+                  <Plus />
                 </el-icon>
-                <div class="el-upload__text">
-                  将您的证书材料拖到这里上传或者 <em>点击选择您的材料</em>
-                </div>
               </el-upload>
             </el-form-item>
-            <el-form-item prop="resultMaterials" label="证件材料">
+            <el-form-item prop="resultMaterials" label="项目获奖扫描件">
+              <div style="display: flex">
+                <template v-for="i of item.value.resultMaterials" :key="i">
+                  <my-image :src="i" :show-delete="true" />
+                </template>
+              </div>
               <el-upload
                 @click="modifyResultMaterialsActiveIndex(index)"
-                drag
+                class="avatar-uploader header"
                 action="/prefix/upload"
-                multiple
+                :show-file-list="false"
                 name="files"
                 with-credentials
                 :on-success="handleResultMaterialsSuccess"
+                :before-upload="beforeImageUpload"
               >
-                <el-icon class="el-icon--upload">
-                  <upload-filled />
+                <el-icon class="avatar-uploader-icon">
+                  <Plus />
                 </el-icon>
-                <div class="el-upload__text">
-                  将您的证书材料拖到这里上传或者 <em>点击选择您的材料</em>
-                </div>
               </el-upload>
             </el-form-item>
           </el-row>
@@ -178,7 +204,7 @@ import {
 } from "@/@types/model";
 import { reactive, ref } from "vue";
 import BaseListItem from "@/components/BaseListItem.vue";
-import { Edit, UploadFilled } from "@element-plus/icons";
+import { Edit, Plus } from "@element-plus/icons";
 import type { UploadProps } from "element-plus";
 import { ElMessage } from "element-plus";
 import { useInfoStore } from "@/store/info";
@@ -190,11 +216,13 @@ import {
 } from "@/api/person/performanceResult";
 import { updatePerformanceresultStatus } from "@/api/company/reviewForm";
 import ReviewButtonGroup from "@/components/ReviewButtonGroup.vue";
+import MyImage from "@/components/MyImage.vue";
+import { beforeImageUpload } from "@/utils/util";
 
 interface Props {
   require?: boolean;
   editable: boolean;
-  review: boolean;
+  review?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {

@@ -1,4 +1,4 @@
-import { UploadFile } from "element-plus";
+import { ElMessage, UploadFile, UploadProps } from "element-plus";
 import { CommonResult } from "@/@types/model";
 
 // export const isCommonResult = 1;
@@ -13,4 +13,12 @@ export const getUploadFileUrl = (uploadFile: UploadFile): string => {
     return response.data[0];
   }
   return "";
+};
+
+export const beforeImageUpload: UploadProps["beforeUpload"] = (rawFile) => {
+  if (rawFile.type !== "image/jpeg") {
+    ElMessage.error("图片格式错误");
+    return false;
+  }
+  return true;
 };

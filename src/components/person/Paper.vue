@@ -138,7 +138,7 @@ import ReviewButtonGroup from "@/components/ReviewButtonGroup.vue";
 interface Props {
   require?: boolean;
   editable: boolean;
-  review: boolean;
+  review?: boolean;
 }
 
 withDefaults(defineProps<Props>(), {

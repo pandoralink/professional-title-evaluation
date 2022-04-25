@@ -21,8 +21,8 @@
           <el-col :span="24">
             <div style="margin-bottom: 10px">证件材料：</div>
             <div style="display: flex">
-              <template v-for="i of 3" :key="i">
-                <my-image :src="item.education.materials[0]" />
+              <template v-for="i of item.education.materials" :key="i">
+                <my-image :src="i" :show-delete="false" />
               </template>
             </div>
           </el-col>
@@ -100,22 +100,24 @@
           </el-row>
           <el-row>
             <el-form-item prop="materials" label="证件材料">
-              <!-- TODO: materials 为链接字符串，没有相应的中文名，无法展示已经上传的文件名 -->
+              <div style="display: flex">
+                <template v-for="i of item.education.materials" :key="i">
+                  <my-image :src="i" :show-delete="true" />
+                </template>
+              </div>
               <el-upload
                 @click="modifyActiveIndex(index)"
-                drag
+                class="avatar-uploader header"
                 action="/prefix/upload"
-                multiple
+                :show-file-list="false"
                 name="files"
                 with-credentials
                 :on-success="handleSuccess"
+                :before-upload="beforeUpload"
               >
-                <el-icon class="el-icon--upload">
-                  <upload-filled />
+                <el-icon class="avatar-uploader-icon">
+                  <Plus />
                 </el-icon>
-                <div class="el-upload__text">
-                  将您的证书材料拖到这里上传或者 <em>点击选择您的材料</em>
-                </div>
               </el-upload>
             </el-form-item>
           </el-row>
@@ -130,10 +132,10 @@
 </template>
 
 <script lang="ts" setup>
-import { CommonResult, Education, Paper } from "@/@types/model";
+import { CommonResult, Education } from "@/@types/model";
 import { computed, reactive, ref } from "vue";
 import BaseListItem from "@/components/BaseListItem.vue";
-import { Edit, UploadFilled } from "@element-plus/icons";
+import { Edit, Plus } from "@element-plus/icons";
 import { ElMessage } from "element-plus";
 import type { UploadProps } from "element-plus";
 import { dayjs } from "element-plus/es";
@@ -151,7 +153,7 @@ import MyImage from "@/components/MyImage.vue";
 interface Props {
   require: boolean;
   editable: boolean;
-  review: boolean;
+  review?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -351,6 +353,13 @@ const handleSuccess: UploadProps["onSuccess"] = (response, uploadFile) => {
     education.materials = [];
   }
   education.materials = response.data;
+};
+const beforeUpload: UploadProps["beforeUpload"] = (rawFile) => {
+  if (rawFile.type !== "image/jpeg") {
+    ElMessage.error("图片格式错误");
+    return false;
+  }
+  return true;
 };
 
 // 当前点击的上传组件位于表单数组的索引

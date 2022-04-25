@@ -22,12 +22,13 @@
             <div>{{ "授予时间：" + item.value.grantTime }}</div>
             <div>{{ "颁奖原因：" + item.value.summery }}</div>
           </el-col>
-          <el-col
-            :span="12"
-            v-for="(item, index) of item.value.materials"
-            :key="index"
-          >
-            <div style="max-width: 400px">{{ "证件材料：" + item }}</div>
+          <el-col :span="24">
+            <div style="margin-bottom: 10px">证件材料：</div>
+            <div style="display: flex">
+              <template v-for="i of item.value.materials" :key="i">
+                <my-image :src="i" :show-delete="false" />
+              </template>
+            </div>
           </el-col>
           <div style="position: absolute; right: 0; top: 0" v-if="editable">
             <el-button type="primary" @click="toEdit(index)">编辑</el-button>
@@ -89,21 +90,24 @@
           </el-row>
           <el-row>
             <el-form-item prop="materials" label="证件材料">
+              <div style="display: flex">
+                <template v-for="i of item.value.materials" :key="i">
+                  <my-image :src="i" :show-delete="true" />
+                </template>
+              </div>
               <el-upload
                 @click="modifyActiveIndex(index)"
-                drag
+                class="avatar-uploader header"
                 action="/prefix/upload"
-                multiple
+                :show-file-list="false"
                 name="files"
                 with-credentials
                 :on-success="handleSuccess"
+                :before-upload="beforeImageUpload"
               >
-                <el-icon class="el-icon--upload">
-                  <upload-filled />
+                <el-icon class="avatar-uploader-icon">
+                  <Plus />
                 </el-icon>
-                <div class="el-upload__text">
-                  将您的证书材料拖到这里上传或者 <em>点击选择您的材料</em>
-                </div>
               </el-upload>
             </el-form-item>
           </el-row>
@@ -124,7 +128,7 @@
 import { CommonResult, PerformanceAward, ReviewFormData } from "@/@types/model";
 import { reactive, ref } from "vue";
 import BaseListItem from "@/components/BaseListItem.vue";
-import { Edit, UploadFilled } from "@element-plus/icons";
+import { Edit, Plus } from "@element-plus/icons";
 import type { UploadProps } from "element-plus";
 import { ElMessage } from "element-plus";
 import { dayjs } from "element-plus/es";
@@ -137,11 +141,13 @@ import {
 } from "@/api/person/performanceAward";
 import { updatePerformanceawardStatus } from "@/api/company/reviewForm";
 import ReviewButtonGroup from "@/components/ReviewButtonGroup.vue";
+import MyImage from "@/components/MyImage.vue";
+import { beforeImageUpload } from "@/utils/util";
 
 interface Props {
-  require: boolean;
+  require?: boolean;
   editable: boolean;
-  review: boolean;
+  review?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {

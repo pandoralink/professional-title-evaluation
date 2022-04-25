@@ -5,13 +5,18 @@
       <Plus />
     </el-icon>
     <span class="action">
-      <el-icon :size="20" @click="dialogVisible = true">
+      <el-icon :size="20" @click="dialogVisible = true" title="放大">
         <zoom-in />
       </el-icon>
-      <el-icon :size="20">
+      <el-icon :size="20" @click="materialDownload" title="下载">
         <download />
       </el-icon>
-      <el-icon :size="20">
+      <el-icon
+        :size="20"
+        v-if="showDelete"
+        @click="materialDelete"
+        title="删除"
+      >
         <delete />
       </el-icon>
     </span>
@@ -24,20 +29,29 @@
 </template>
 
 <script lang="ts" setup>
-import { Delete, Download, ZoomIn } from "@element-plus/icons";
+import { Delete, Download, ZoomIn, Plus } from "@element-plus/icons";
 import { ref } from "vue";
+import { ElMessage } from "element-plus";
 
-defineProps<{
+const props = defineProps<{
   src: string;
+  showDelete: boolean;
 }>();
 
 const dialogVisible = ref(false);
+const materialDownload = () => {
+  ElMessage.info("下载功能暂未开发");
+};
+const materialDelete = () => {
+  ElMessage.info("删除功能暂未开发");
+};
 </script>
 
 <style scoped>
 .header {
   position: relative;
   width: 120px;
+  height: 120px;
   text-align: center;
   border: 1px dashed #d9d9d9;
   border-radius: 10px;
