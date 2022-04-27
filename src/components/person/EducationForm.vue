@@ -101,8 +101,15 @@
           <el-row>
             <el-form-item prop="materials" label="证件材料">
               <div style="display: flex">
-                <template v-for="i of item.education.materials" :key="i">
-                  <my-image :src="i" :show-delete="true" />
+                <template
+                  v-for="(i, index) of item.education.materials"
+                  :key="i"
+                >
+                  <my-image
+                    :src="i"
+                    :show-delete="true"
+                    @delete="deleteMaterial(item.education.materials, index)"
+                  />
                 </template>
               </div>
               <el-upload
@@ -149,6 +156,7 @@ import {
 import { updateEducationStatus } from "@/api/company/reviewForm";
 import ReviewButtonGroup from "@/components/ReviewButtonGroup.vue";
 import MyImage from "@/components/MyImage.vue";
+import { deleteMaterial } from "@/utils/util";
 
 interface Props {
   require: boolean;
@@ -352,7 +360,7 @@ const handleSuccess: UploadProps["onSuccess"] = (response, uploadFile) => {
   if (!education?.materials) {
     education.materials = [];
   }
-  education.materials = response.data;
+  education.materials.push(...response.data);
 };
 const beforeUpload: UploadProps["beforeUpload"] = (rawFile) => {
   if (rawFile.type !== "image/jpeg") {

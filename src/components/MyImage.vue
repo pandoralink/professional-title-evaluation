@@ -38,12 +38,22 @@ const props = defineProps<{
   showDelete: boolean;
 }>();
 
+const emits = defineEmits<{
+  (e: "delete"): void;
+}>();
+
 const dialogVisible = ref(false);
 const materialDownload = () => {
-  ElMessage.info("下载功能暂未开发");
+  const a = document.createElement("a");
+  a.style.display = "none";
+  a.href = props.src;
+  a.download = props.src;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
 };
 const materialDelete = () => {
-  ElMessage.info("删除功能暂未开发");
+  emits("delete");
 };
 </script>
 

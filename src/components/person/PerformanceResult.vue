@@ -119,8 +119,15 @@
             <el-form-item prop="projectMaterials" label="项目材料扫描件">
               <!-- 二次封装 upload 组件 -->
               <div style="display: flex">
-                <template v-for="i of item.value.projectMaterials" :key="i">
-                  <my-image :src="i" :show-delete="true" />
+                <template
+                  v-for="(i, index) of item.value.projectMaterials"
+                  :key="i"
+                >
+                  <my-image
+                    :src="i"
+                    :show-delete="true"
+                    @delete="deleteMaterial(item.value.projectMaterials, index)"
+                  />
                 </template>
               </div>
               <el-upload
@@ -140,8 +147,15 @@
             </el-form-item>
             <el-form-item prop="tenureMaterials" label="个人项目任职证明扫描件">
               <div style="display: flex">
-                <template v-for="i of item.value.tenureMaterials" :key="i">
-                  <my-image :src="i" :show-delete="true" />
+                <template
+                  v-for="(i, index) of item.value.tenureMaterials"
+                  :key="i"
+                >
+                  <my-image
+                    :src="i"
+                    :show-delete="true"
+                    @delete="deleteMaterial(item.value.tenureMaterials, index)"
+                  />
                 </template>
               </div>
               <el-upload
@@ -161,8 +175,15 @@
             </el-form-item>
             <el-form-item prop="resultMaterials" label="项目获奖扫描件">
               <div style="display: flex">
-                <template v-for="i of item.value.resultMaterials" :key="i">
-                  <my-image :src="i" :show-delete="true" />
+                <template
+                  v-for="(i, index) of item.value.resultMaterials"
+                  :key="i"
+                >
+                  <my-image
+                    :src="i"
+                    :show-delete="true"
+                    @delete="deleteMaterial(item.value.resultMaterials, index)"
+                  />
                 </template>
               </div>
               <el-upload
@@ -218,6 +239,7 @@ import { updatePerformanceresultStatus } from "@/api/company/reviewForm";
 import ReviewButtonGroup from "@/components/ReviewButtonGroup.vue";
 import MyImage from "@/components/MyImage.vue";
 import { beforeImageUpload } from "@/utils/util";
+import { deleteMaterial } from "@/utils/util";
 
 interface Props {
   require?: boolean;
@@ -350,7 +372,7 @@ const handleProjectMaterialsSuccess: UploadProps["onSuccess"] = (
   if (!value?.projectMaterials) {
     value.projectMaterials = [];
   }
-  value.projectMaterials = response.data;
+  value.projectMaterials.push(...response.data);
 };
 const handleTenureMaterialsSuccess: UploadProps["onSuccess"] = (
   response,
@@ -360,7 +382,7 @@ const handleTenureMaterialsSuccess: UploadProps["onSuccess"] = (
   if (!value?.tenureMaterials) {
     value.tenureMaterials = [];
   }
-  value.tenureMaterials = response.data;
+  value.tenureMaterials.push(...response.data);
 };
 const handleResultMaterialsSuccess: UploadProps["onSuccess"] = (
   response,
@@ -370,7 +392,7 @@ const handleResultMaterialsSuccess: UploadProps["onSuccess"] = (
   if (!value?.resultMaterials) {
     value.resultMaterials = [];
   }
-  value.resultMaterials = response.data;
+  value.resultMaterials.push(...response.data);
 };
 
 // 当前点击的上传组件位于表单数组的索引

@@ -22,3 +22,7 @@ export const beforeImageUpload: UploadProps["beforeUpload"] = (rawFile) => {
   }
   return true;
 };
+
+export const deleteMaterial = (state: unknown[], index: number) => {
+  state.splice(index, 1);
+};

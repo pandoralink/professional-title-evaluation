@@ -93,8 +93,12 @@
           <el-row>
             <el-form-item prop="materials" label="证件材料">
               <div style="display: flex">
-                <template v-for="i of item.value.materials" :key="i">
-                  <my-image :src="i" :show-delete="true" />
+                <template v-for="(i, index) of item.value.materials" :key="i">
+                  <my-image
+                    :src="i"
+                    :show-delete="true"
+                    @delete="deleteMaterial(item.value.materials, index)"
+                  />
                 </template>
               </div>
               <el-upload
@@ -145,6 +149,7 @@ import ReviewButtonGroup from "@/components/ReviewButtonGroup.vue";
 import { updateWorkExperienceStatus } from "@/api/company/reviewForm";
 import MyImage from "@/components/MyImage.vue";
 import { beforeImageUpload } from "@/utils/util";
+import { deleteMaterial } from "@/utils/util";
 
 interface Props {
   require: boolean;
@@ -268,7 +273,7 @@ const handleSuccess: UploadProps["onSuccess"] = (response, uploadFile) => {
   if (!value?.materials) {
     value.materials = [];
   }
-  value.materials = response.data;
+  value.materials.push(...response.data);
 };
 
 // 当前点击的上传组件位于表单数组的索引
